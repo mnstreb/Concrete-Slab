@@ -218,17 +218,18 @@
 </head>
 <body class="p-4 md:p-8">
 
-    <!-- Removed max-w-6xl constraint for full fluid width, using w-full -->
     <div class="w-full mx-auto">
         <header class="mb-6">
             <h1 class="text-3xl font-bold text-gray-900">Comprehensive Concrete Cost Estimator</h1>
             <p class="text-lg text-gray-600">Enter slab dimensions and cost assumptions to estimate materials and labor. Click the 3D model to toggle the rebar view!</p>
         </header>
 
-        <!-- Main Content -->
+        <!-- Main Content Grid: 3 columns on desktop -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Column 1: Concrete Inputs -->
+            
+            <!-- COLUMN 1: Dimensions & General Costs (1/3 width) -->
             <div class="md:col-span-1">
+                <!-- 1. Slab Dimensions Card -->
                 <div class="card">
                     <h2 class="text-xl font-semibold mb-4 text-gray-800">1. Slab Dimensions</h2>
                     <div class="input-group">
@@ -261,25 +262,9 @@
                     </div>
                 </div>
 
+                <!-- 2. General Material Costs Card -->
                 <div class="card">
-                    <h2 class="text-xl font-semibold mb-4 text-gray-800">2. Concrete Cost Model</h2>
-                    
-                    <h3 class="text-lg font-semibold mb-2 text-gray-700">General</h3>
-                    <div class="input-group">
-                        <label for="jobDifficulty">Job Access / Difficulty</label>
-                        <select id="jobDifficulty">
-                            <option value="1.0" selected>Easy (1.0x Labor)</option>
-                            <option value="1.5">Medium (1.5x Labor)</option>
-                            <option value="2.0">Hard (2.0x Labor)</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label for="laborRate">Base Labor Rate</label>
-                        <div class="input-adornment">
-                            <input type="number" id="laborRate" value="45" min="0">
-                            <span>$/ hr</span>
-                        </div>
-                    </div>
+                    <h2 class="text-xl font-semibold mb-4 text-gray-800">2. Material Costs (Per Unit)</h2>
                     <div class="input-group">
                         <label for="costConcrete">Concrete Material Cost</label>
                         <div class="input-adornment">
@@ -294,16 +279,7 @@
                             <span>%</span>
                         </div>
                     </div>
-                    <div class="input-group">
-                        <label for="laborFactor">General Labor Factor (Excavation/Setup/Pour)</label>
-                        <div class="input-adornment">
-                            <input type="number" id="laborFactor" value="4.8" step="0.1" min="0">
-                            <span>min / sq ft</span>
-                        </div>
-                    </div>
-
-                    <h3 class="text-lg font-semibold mb-2 text-gray-700 border-t pt-4">Gravel & Spoils</h3>
-                    <div class="input-group">
+                     <div class="input-group">
                         <label for="costGravelMaterial" class="flex items-center">
                             Gravel Material Cost
                             <span class="tooltip">
@@ -324,51 +300,74 @@
                         </div>
                     </div>
                     <div class="input-group">
-                        <label for="gravelLaborFactor">Gravel Labor Factor (Spread/Tamp)</label>
-                        <div class="input-adornment">
-                            <input type="number" id="gravelLaborFactor" value="0.6" step="0.1" min="0">
-                            <span>min / sq ft</span>
-                        </div>
-                    </div>
-                    <div class="input-group">
                         <label for="costSpoilsHaulAway">Spoils Haul-Away Cost</label>
                         <div class="input-adornment">
                             <input type="number" id="costSpoilsHaulAway" value="50" min="0">
                             <span>$/ cu yd</span>
                         </div>
                     </div>
-
-                    <h3 class="text-lg font-semibold mb-2 text-gray-700 border-t pt-4">Vapor Barrier</h3>
+                    <!-- FIX: Re-added missing costFormworkMaterial input element -->
                     <div class="input-group">
-                        <label for="costVaporBarrierMaterial" class="flex items-center">
-                            Vapor Barrier Material
-                            <span class="tooltip">
-                                <span class="info-icon">i</span>
-                                <span class="tooltip-content">
-                                    <table>
-                                        <tr><th>Thickness</th><th>Common Use</th><th>Cost/SF</th></tr>
-                                        <tr><td>6-mil</td><td>Residential (min)</td><td>$0.05–$0.10</td></tr>
-                                        <tr><td>10-mil</td><td>Standard Res.</td><td>$0.10–$0.20</td></tr>
-                                        <tr><td>15-mil</td><td>Heavy-duty</td><td>$0.15–$0.30</td></tr>
-                                        <tr><td>20-mil</td><td>Industrial</td><td>$0.20–$0.40</td></tr>
-                                    </table>
-                                </span>
-                            </span>
-                        </label>
+                        <label for="costFormworkMaterial">Formwork Material Cost</label>
                         <div class="input-adornment">
-                            <input type="number" id="costVaporBarrierMaterial" value="0.10" step="0.01" min="0">
-                            <span>$/ sq ft</span>
+                            <input type="number" id="costFormworkMaterial" value="3.00" step="0.50" min="0">
+                            <span>$/ lf</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- COLUMN 2: Labor & Reinforcement Settings (1/3 width) -->
+            <div class="md:col-span-1">
+
+                <!-- 2. Labor Settings Card -->
+                <div class="card">
+                    <h2 class="text-xl font-semibold mb-4 text-gray-800">2. Labor & Productivity</h2>
+                    <div class="input-group">
+                        <label for="laborRate">Base Labor Rate</label>
+                        <div class="input-adornment">
+                            <input type="number" id="laborRate" value="45" min="0">
+                            <span>$/ hr</span>
                         </div>
                     </div>
                     <div class="input-group">
-                        <label for="vaporBarrierLaborFactor">Vapor Barrier Labor Factor</label>
+                        <label for="jobDifficulty">Job Access / Difficulty</label>
+                        <select id="jobDifficulty">
+                            <option value="1.0" selected>Easy (1.0x Labor)</option>
+                            <option value="1.5">Medium (1.5x Labor)</option>
+                            <option value="2.0">Hard (2.0x Labor)</option>
+                        </select>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2 text-gray-700 border-t pt-4">Productivity Factors (Min/SF or Min/LF)</h3>
+                    <div class="input-group">
+                        <label for="laborFactor">General Labor (Excavation/Pour)</label>
                         <div class="input-adornment">
-                            <input type="number" id="vaporBarrierLaborFactor" value="0.3" step="0.05" min="0">
+                            <input type="number" id="laborFactor" value="4.8" step="0.1" min="0">
                             <span>min / sq ft</span>
                         </div>
                     </div>
-                    
-                    <h3 class="text-lg font-semibold mb-2 text-gray-700 border-t pt-4">Rebar (Bottom-Up)</h3>
+                    <div class="input-group">
+                        <label for="gravelLaborFactor">Gravel Labor (Spread/Tamp)</label>
+                        <div class="input-adornment">
+                            <input type="number" id="gravelLaborFactor" value="0.6" step="0.1" min="0">
+                            <span>min / sq ft</span>
+                        </div>
+                    </div>
+                    <!-- FIX: Re-added missing formworkLaborFactor input element -->
+                    <div class="input-group">
+                        <label for="formworkLaborFactor">Formwork Labor (Set/Strip)</label>
+                        <div class="input-adornment">
+                            <input type="number" id="formworkLaborFactor" value="5.0" step="0.5" min="0">
+                            <span>min / lf</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 2. Reinforcement and Protection Card -->
+                <div class="card">
+                    <h2 class="text-xl font-semibold mb-4 text-gray-800">2. Reinforcement & Protection</h2>
+                    <h3 class="text-lg font-semibold mb-2 text-gray-700">Rebar Settings</h3>
                     <div class="input-group">
                         <label for="rebarSize" class="flex items-center">
                             Rebar Size
@@ -397,21 +396,6 @@
                     <div class="input-group">
                         <label for="rebarSpacing" class="flex items-center">
                             Rebar Spacing (On-Center)
-                            <span class="tooltip">
-                                <span class="info-icon">i</span>
-                                <span class="tooltip-content">
-                                    <table>
-                                        <tr>
-                                            <th>Spacing</th>
-                                            <th>Label</th>
-                                            <th>When to Use</th>
-                                        </tr>
-                                        <tr><td>12" o.c.</td><td>Heavy-Duty</td><td>Warehouse, industrial, heavy loads</td></tr>
-                                        <tr><td>18" o.c.</td><td>Standard (Default)</td><td>Residential, commercial, 80% of slabs</td></tr>
-                                        <tr><td>24" o.c.</td><td>Light-Duty</td><td>Small pads, budget projects</td></tr>
-                                    </table>
-                                </span>
-                            </span>
                         </label>
                         <select id="rebarSpacing">
                             <option value="12">12 inches</option>
@@ -433,20 +417,20 @@
                             <span>min / sq ft</span>
                         </div>
                     </div>
-                    
-                    <h3 class="text-lg font-semibold mb-2 text-gray-700 border-t pt-4">Other Costs</h3>
+
+                    <h3 class="text-lg font-semibold mb-2 text-gray-700 border-t pt-4">Vapor Barrier / Finishing</h3>
                     <div class="input-group">
-                        <label for="costFormworkMaterial">Formwork Material Cost</label>
+                        <label for="costVaporBarrierMaterial">Vapor Barrier Material Cost</label>
                         <div class="input-adornment">
-                            <input type="number" id="costFormworkMaterial" value="3.00" step="0.50" min="0">
-                            <span>$/ lf</span>
+                            <input type="number" id="costVaporBarrierMaterial" value="0.10" step="0.01" min="0">
+                            <span>$/ sq ft</span>
                         </div>
                     </div>
                     <div class="input-group">
-                        <label for="formworkLaborFactor">Formwork Labor Factor (Set/Strip)</label>
+                        <label for="vaporBarrierLaborFactor">Vapor Barrier Labor Factor</label>
                         <div class="input-adornment">
-                            <input type="number" id="formworkLaborFactor" value="5.0" step="0.5" min="0">
-                            <span>min / lf</span>
+                            <input type="number" id="vaporBarrierLaborFactor" value="0.3" step="0.05" min="0">
+                            <span>min / sq ft</span>
                         </div>
                     </div>
                     <div class="input-group">
@@ -456,31 +440,15 @@
                             <span>$/ sq ft</span>
                         </div>
                     </div>
-                    <div class="input-group-check">
-                        <input type="checkbox" id="pumpRequired">
-                        <label for="pumpRequired">Concrete Pump Required?</label>
-                    </div>
-                    <div class="input-group">
-                        <label for="pumpRentalFee">Pump Rental Fee</label>
-                        <div class="input-adornment">
-                            <input type="number" id="pumpRentalFee" value="1000" step="50" min="0">
-                            <span>$ flat fee</span>
-                        </div>
-                    </div>
-                    <div class="input-group mb-0">
-                        <label for="costEquipmentRental">Other Equipment Rentals</label>
-                        <div class="input-adornment">
-                            <input type="number" id="costEquipmentRental" value="250" step="50" min="0">
-                            <span>$ flat fee</span>
-                        </div>
-                    </div>
                 </div>
+
             </div>
 
-            <!-- Column 2: Concrete Visual & Outputs -->
-            <div class="md:col-span-2">
+            <!-- COLUMN 3: Visual & Outputs (1/3 width) -->
+            <div class="md:col-span-1">
+
                 <div class="card">
-                    <h2 class="text-xl font-semibold mb-4 text-gray-800">Slab Visual Simulator (3D)</h2>
+                    <h2 class="text-xl font-semibold mb-4 text-gray-800">3. Slab Visual Simulator (3D)</h2>
                     <div class="canvas-container">
                         <canvas id="slabSimulator"></canvas>
                     </div>
@@ -491,157 +459,31 @@
                     </p>
                 </div>
 
+                <!-- Summary & Negotiation -->
                 <div class="card">
-                    <h2 class="text-xl font-semibold mb-4 text-gray-800">3. Concrete Estimated Outputs</h2>
-                    <dl class="mb-6">
-                        <h3 class="text-lg font-semibold mb-2 text-gray-700">Dimensions & Volume</h3>
-                        <div class="output-group">
-                            <dt>Total Area</dt>
-                            <dd id="outArea">200.00 sq ft</dd>
-                        </div>
-                        <div class="output-group">
-                            <dt>Slab Perimeter</dt>
-                            <dd id="outPerimeter">60.00 lf</dd>
-                        </div>
-                        <div class="output-group">
-                            <dt>Total Volume (Concrete)</dt>
-                            <dd id="outVolume">2.47 cu yds</dd>
-                        </div>
-                        <div class="output-group">
-                            <dt>Total Concrete (w/ waste)</dt>
-                            <dd id="outVolumeWaste">2.72 cu yds</dd>
-                        </div>
-                        <div class="output-group">
-                            <dt>Total Volume (Gravel & Spoils)</dt>
-                            <dd id="outVolumeGravel">2.47 cu yds</dd>
-                        </div>
-                        <div class="output-group">
-                            <dt>Total Linear Feet (Rebar)</dt>
-                            <dd id="outRebarLf">215.00 lf</dd>
-                        </div>
-                        <div class="output-group">
-                            <dt>Total Excavation Depth</dt>
-                            <dd id="outExcavationDepth">8.00 in</dd>
-                        </div>
-                    </dl>
-
-                    <h3 class="text-lg font-semibold mb-2 text-gray-700">Material Costs</h3>
-                    <dl class="mb-6">
-                        <div class="output-group">
-                            <dt>Concrete Material</dt>
-                            <dd id="outCostConcrete">$407.41</dd>
-                        </div>
-                        <div class="output-group">
-                            <dt>Gravel Material</dt>
-                            <dd id="outGravelMaterial">$74.07</dd>
-                        </div>
-                        <div class="output-group">
-                            <dt>Spoils Haul-Away</dt>
-                            <dd id="outCostSpoilsHaulAway">$123.46</dd>
-                        </div>
-                        <div class="output-group">
-                            <dt>Vapor Barrier Material</dt>
-                            <dd id="outVaporBarrierMaterial">$20.00</dd>
-                        </div>
-                        <div class="output-group">
-                            <dt>Rebar Material</dt>
-                            <dd id="outRebarMaterial">$139.75</dd>
-                        </div>
-                        <div class="output-group">
-                            <dt>Formwork Material</dt>
-                            <dd id="outCostFormworkMaterial">$180.00</dd>
-                        </div>
-                        <div class="output-group">
-                            <dt>Concrete Pump Rental</dt>
-                            <dd id="outCostPump">$0.00</dd>
-                        </div>
-                        <div class="output-group">
-                            <dt>Other Rentals</dt>
-                            <dd id="outCostEquipmentRental">$250.00</dd>
-                        </div>
-                        <div class="output-group total font-medium">
-                            <dt>Total Material Cost</dt>
-                            <dd id="outTotalMaterial">$1,194.69</dd>
-                        </div>
-                    </dl>
-
-                    <h3 class="text-lg font-semibold mb-2 text-gray-700">Labor Costs</h3>
-                    <dl class="mb-6">
-                        <!-- Hour Breakdown -->
-                        <div class="output-group output-group-small">
-                            <dt>General Labor Hours</dt>
-                            <dd id="outBaseLaborHours">16.00 hrs</dd>
-                        </div>
-                        <div class="output-group output-group-small">
-                            <dt>Gravel Labor Hours</dt>
-                            <dd id="outGravelLaborHours">2.00 hrs</dd>
-                        </div>
-                        <div class="output-group output-group-small">
-                            <dt>Vapor Barrier Labor Hours</dt>
-                            <dd id="outVaporBarrierLaborHours">1.00 hrs</dd>
-                        </div>
-                        <div class="output-group output-group-small">
-                            <dt>Rebar Labor Hours</dt>
-                            <dd id="outRebarLaborHours">3.00 hrs</dd>
-                        </div>
-                        <div class="output-group output-group-small">
-                            <dt>Formwork Labor Hours</dt>
-                            <dd id="outFormworkLaborHours">5.00 hrs</dd>
-                        </div>
-                        <div class="output-group total font-medium border-t mt-2">
-                            <dt>Total Labor Hours</dt>
-                            <dd id="outTotalLaborHours">27.00 hrs</dd>
-                        </div>
-                        
-                        <!-- Cost Breakdown -->
-                        <div class="output-group mt-4">
-                            <dt>General Labor Cost</dt>
-                            <dd id="outBaseLaborCost">$720.00</dd>
-                        </div>
-                        <div class="output-group">
-                            <dt>Gravel Labor</dt>
-                            <dd id="outGravelLabor">$90.00</dd>
-                        </div>
-                        <div class="output-group">
-                            <dt>Vapor Barrier Labor</dt>
-                            <dd id="outVaporBarrierLabor">$45.00</dd>
-                        </div>
-                        <div class="output-group">
-                            <dt>Rebar Labor</dt>
-                            <dd id="outRebarLabor">$135.00</dd>
-                        </div>
-                        <div class="output-group">
-                            <dt>Formwork Labor</dt>
-                            <dd id="outFormworkLabor">$225.00</dd>
-                        </div>
-                        <div class="output-group">
-                            <dt>Finishing (Bundled M+L)</dt>
-                            <dd id="outCostFinishing">$300.00</dd>
-                        </div>
-                        <div class="output-group total font-medium">
-                            <dt>Total Labor Cost</dt>
-                            <dd id="outTotalLabor">$1,515.00</dd>
-                        </div>
-                    </dl>
-
-                    <div class="bg-blue-50 p-4 rounded-lg">
+                    <h2 class="text-xl font-semibold mb-4 text-gray-800">4. Financial Summary</h2>
+                    <div class="bg-blue-50 p-4 rounded-lg mb-4">
                         <dl>
                             <div class="output-group total border-none p-0">
                                 <dt class="text-xl font-bold text-blue-900">Total Project Cost (M+L)</dt>
                                 <dd id="outGrandTotal" class="text-2xl font-bold text-blue-900">$2,709.69</dd>
                             </div>
+                            <div class="output-group output-group-small border-t mt-2">
+                                <dt>Total Labor Hours</dt>
+                                <dd id="outTotalLaborHours">27.00 hrs</dd>
+                            </div>
+                            <div class="output-group output-group-small">
+                                <dt>Total Volume (w/ waste)</dt>
+                                <dd id="outVolumeWaste">2.72 cu yds</dd>
+                            </div>
                         </dl>
                     </div>
-                </div>
-
-                <!-- Negotiation Check Card -->
-                <div class="card">
-                    <h2 class="text-xl font-semibold mb-4 text-gray-800">4. Negotiation Check</h2>
                     
+                    <h3 class="text-lg font-semibold mb-2 text-gray-700">Negotiation Check</h3>
                     <div class="input-group">
                         <label for="markupPercent">Assumed Contractor Markup (O&P)</label>
                         <div class="input-adornment">
-                            <input type="number" id="markupPercent" value="20" min="0" max="100">
+                            <input type="number" id="markupPercent" value="20" min="0" max="100" step="1">
                             <span>%</span>
                         </div>
                     </div>
@@ -667,28 +509,175 @@
                             <dd id="outBidDifference" class="font-bold">$0.00</dd>
                         </div>
                         <div class="output-group">
-                            <dt class="flex items-center">
-                                Variance
-                                <span class="tooltip">
-                                    <span class="info-icon">i</span>
-                                    <span class="tooltip-content">
-                                        <p>This compares the bid to your 'Should-Pay' price. A 'Reasonable' variance is close to 0%.</p>
-                                        <table>
-                                            <tr><th>Variance</th><th>Label</th><th>Notes</th></tr>
-                                            <tr><td>0–10%</td><td>Reasonable</td><td>Bid is aligned with your estimate.</td></tr>
-                                            <tr><td>10%–20%</td><td>Moderate</td><td>May be high, or a complex job.</td></tr>
-                                            <tr><td>> 20%</td><td>High</td><td>Good area to negotiate.</td></tr>
-                                        </table>
-                                    </span>
-                                </span>
-                            </dt>
+                            <dt class="flex items-center">Variance</dt>
                             <dd id="outBidVariance" class="font-bold">0.00%</dd>
                         </div>
                     </dl>
+
+                    <h3 class="text-lg font-semibold mb-2 text-gray-700 border-t pt-4">Other Flat Fees</h3>
+                    <div class="input-group mb-0">
+                        <div class="input-group-check">
+                            <input type="checkbox" id="pumpRequired">
+                            <label for="pumpRequired">Concrete Pump Required?</label>
+                        </div>
+                        <label for="pumpRentalFee">Pump Rental Fee</label>
+                        <div class="input-adornment">
+                            <input type="number" id="pumpRentalFee" value="1000" step="50" min="0">
+                            <span>$ flat fee</span>
+                        </div>
+                    </div>
+                    <div class="input-group mb-0">
+                        <label for="costEquipmentRental">Other Equipment Rentals</label>
+                        <div class="input-adornment">
+                            <input type="number" id="costEquipmentRental" value="250" step="50" min="0">
+                            <span>$ flat fee</span>
+                        </div>
+                    </div>
                 </div>
 
             </div>
         </div>
+
+        <!-- Detailed Breakdown Section -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+            <!-- Detailed Outputs -->
+            <div class="md:col-span-1">
+                 <div class="card">
+                    <h2 class="text-xl font-semibold mb-4 text-gray-800">5. Dimensional Breakdown</h2>
+                    <dl class="mb-6">
+                        <div class="output-group">
+                            <dt>Total Area</dt>
+                            <dd id="outArea">200.00 sq ft</dd>
+                        </div>
+                        <div class="output-group">
+                            <dt>Slab Perimeter</dt>
+                            <dd id="outPerimeter">60.00 lf</dd>
+                        </div>
+                        <div class="output-group">
+                            <dt>Total Excavation Depth</dt>
+                            <dd id="outExcavationDepth">8.00 in</dd>
+                        </div>
+                        <div class="output-group">
+                            <dt>Total Volume (Concrete)</dt>
+                            <dd id="outVolume">2.47 cu yds</dd>
+                        </div>
+                        <div class="output-group">
+                            <dt>Total Volume (Gravel)</dt>
+                            <dd id="outVolumeGravel">2.47 cu yds</dd>
+                        </div>
+                        <div class="output-group">
+                            <dt>Total Linear Feet (Rebar)</dt>
+                            <dd id="outRebarLf">215.00 lf</dd>
+                        </div>
+                    </dl>
+                </div>
+            </div>
+            
+            <div class="md:col-span-1">
+                 <div class="card">
+                    <h2 class="text-xl font-semibold mb-4 text-gray-800">6. Detailed Material Costs</h2>
+                    <dl class="mb-6">
+                        <div class="output-group">
+                            <dt>Concrete Material</dt>
+                            <dd id="outCostConcrete">$407.41</dd>
+                        </div>
+                        <div class="output-group">
+                            <dt>Gravel Material</dt>
+                            <dd id="outGravelMaterial">$74.07</dd>
+                        </div>
+                        <div class="output-group">
+                            <dt>Spoils Haul-Away</dt>
+                            <dd id="outCostSpoilsHaulAway">$123.46</dd>
+                        </div>
+                        <div class="output-group">
+                            <dt>Vapor Barrier Material</dt>
+                            <dd id="outVaporBarrierMaterial">$20.00</dd>
+                        </div>
+                        <div class="output-group">
+                            <dt>Rebar Material</dt>
+                            <dd id="outRebarMaterial">$139.75</dd>
+                        </div>
+                        <div class="output-group">
+                            <dt>Formwork Material</dt>
+                            <dd id="outCostFormworkMaterial">$180.00</dd>
+                        </div>
+                        <div class="output-group total font-medium">
+                            <dt>Total Material Cost</dt>
+                            <dd id="outTotalMaterial">$1,194.69</dd>
+                        </div>
+                    </dl>
+                </div>
+            </div>
+
+            <div class="md:col-span-1">
+                 <div class="card">
+                    <h2 class="text-xl font-semibold mb-4 text-gray-800">7. Detailed Labor Costs</h2>
+                    <dl class="mb-6">
+                        <div class="output-group output-group-small">
+                            <dt>General Labor Hours</dt>
+                            <dd id="outBaseLaborHours">16.00 hrs</dd>
+                        </div>
+                        <div class="output-group output-group-small">
+                            <dt>Gravel Labor Hours</dt>
+                            <dd id="outGravelLaborHours">2.00 hrs</dd>
+                        </div>
+                        <div class="output-group output-group-small">
+                            <dt>Vapor Barrier Labor Hours</dt>
+                            <dd id="outVaporBarrierLaborHours">1.00 hrs</dd>
+                        </div>
+                        <div class="output-group output-group-small">
+                            <dt>Rebar Labor Hours</dt>
+                            <dd id="outRebarLaborHours">3.00 hrs</dd>
+                        </div>
+                        <div class="output-group output-group-small">
+                            <dt>Formwork Labor Hours</dt>
+                            <dd id="outFormworkLaborHours">5.00 hrs</dd>
+                        </div>
+                        <div class="output-group total font-medium border-t mt-2">
+                            <dt>Total Labor Cost</dt>
+                            <dd id="outTotalLabor">$1,515.00</dd>
+                        </div>
+                    </dl>
+                    <!-- FIX: Re-added missing individual labor cost elements -->
+                    <h3 class="text-lg font-semibold mb-2 text-gray-700 border-t pt-4">Cost Components</h3>
+                    <div class="output-group output-group-small">
+                        <dt>General Labor Cost</dt>
+                        <dd id="outBaseLaborCost">$720.00</dd>
+                    </div>
+                    <div class="output-group output-group-small">
+                        <dt>Gravel Labor Cost</dt>
+                        <dd id="outGravelLabor">$90.00</dd>
+                    </div>
+                    <div class="output-group output-group-small">
+                        <dt>Vapor Barrier Labor Cost</dt>
+                        <dd id="outVaporBarrierLabor">$45.00</dd>
+                    </div>
+                    <div class="output-group output-group-small">
+                        <dt>Rebar Labor Cost</dt>
+                        <dd id="outRebarLabor">$135.00</dd>
+                    </div>
+                    <div class="output-group output-group-small">
+                        <dt>Formwork Labor Cost</dt>
+                        <dd id="outFormworkLabor">$225.00</dd>
+                    </div>
+
+                    <div class="output-group">
+                        <dt>Finishing (Bundled M+L)</dt>
+                        <dd id="outCostFinishing">$300.00</dd>
+                    </div>
+                    <div class="output-group">
+                        <dt>Concrete Pump Rental</dt>
+                        <dd id="outCostPump">$0.00</dd>
+                    </div>
+                    <div class="output-group">
+                        <dt>Other Rentals</dt>
+                        <dd id="outCostEquipmentRental">$250.00</dd>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
     </div>
 
     <script>
@@ -733,7 +722,9 @@
             'outGravelMaterial', 'outCostSpoilsHaulAway', 'outVaporBarrierMaterial', 'outRebarMaterial', 'outCostFormworkMaterial', 'outCostPump', 'outCostEquipmentRental',
             'outTotalMaterial', 
             'outBaseLaborHours', 'outGravelLaborHours', 'outVaporBarrierLaborHours', 'outRebarLaborHours', 'outFormworkLaborHours', 'outTotalLaborHours',
-            'outBaseLaborCost', 'outGravelLabor', 'outVaporBarrierLabor', 'outRebarLabor', 'outFormworkLabor', 'outCostFinishing', 'outTotalLabor', 'outGrandTotal', 
+            // FIX: Restored missing individual labor cost outputs for calculation logic
+            'outBaseLaborCost', 'outGravelLabor', 'outVaporBarrierLabor', 'outRebarLabor', 'outFormworkLabor', 
+            'outCostFinishing', 'outTotalLabor', 'outGrandTotal', 
             'thicknessLabel', 'gravelThicknessLabel', 'outExcavationDepth', 'rebarLabel',
             'outShouldPayBid', 'outBidDifference', 'outBidVariance'
         ].reduce((acc, id) => {
@@ -815,7 +806,7 @@
 
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
             s.scene.add(ambientLight);
-            // FIX: Corrected typo from 'DirectionialLight' to 'DirectionalLight'
+            // FIX: Corrected typo from 'DirectionialLight' to 'DirectionalLight' (already fixed, keeping comment for clarity)
             const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
             directionalLight.position.set(10, 20, 5);
             s.scene.add(directionalLight);
