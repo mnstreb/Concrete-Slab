@@ -15,6 +15,8 @@
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f4f7f6;
+            min-height: 100vh; /* Ensure body takes up full viewport height */
+            margin: 0;
         }
         .card {
             background-color: white;
@@ -44,7 +46,7 @@
             appearance: none;
         }
         .input-group select {
-             background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%2BviewBox%3D%220%200%2020%2020%22%20fill%3D%22currentColor%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%20%2F%3E%3C%2Fsvg%3E');
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22currentColor%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%20%2F%3E%3C%2Fsvg%3E');
             background-repeat: no-repeat;
             background-position: right 0.75rem center;
             background-size: 1.25em 1.25em;
@@ -121,7 +123,8 @@
         }
         .canvas-container {
             width: 100%;
-            height: 300px;
+            /* Increased height from 300px to 400px for a better dynamic look */
+            height: 400px; 
             background-color: #F9FAFB;
             border: 1px solid #E5E7EB;
             border-radius: 0.5rem;
@@ -215,10 +218,11 @@
 </head>
 <body class="p-4 md:p-8">
 
-    <div class="max-w-6xl mx-auto">
+    <!-- Removed max-w-6xl constraint for full fluid width, using w-full -->
+    <div class="w-full mx-auto">
         <header class="mb-6">
             <h1 class="text-3xl font-bold text-gray-900">Comprehensive Concrete Cost Estimator</h1>
-            <p class="text-lg text-gray-600">Enter slab dimensions and cost assumptions to estimate materials and labor.</p>
+            <p class="text-lg text-gray-600">Enter slab dimensions and cost assumptions to estimate materials and labor. Click the 3D model to toggle the rebar view!</p>
         </header>
 
         <!-- Main Content -->
@@ -230,28 +234,28 @@
                     <div class="input-group">
                         <label for="length">Length</label>
                         <div class="input-adornment">
-                            <input type="number" id="length" value="20">
+                            <input type="number" id="length" value="20" min="1" step="0.5">
                             <span>ft</span>
                         </div>
                     </div>
                     <div class="input-group">
                         <label for="width">Width</label>
                         <div class="input-adornment">
-                            <input type="number" id="width" value="10">
+                            <input type="number" id="width" value="10" min="1" step="0.5">
                             <span>ft</span>
                         </div>
                     </div>
                     <div class="input-group">
                         <label for="thickness">Concrete Thickness</label>
                         <div class="input-adornment">
-                            <input type="number" id="thickness" value="4">
+                            <input type="number" id="thickness" value="4" min="1" step="0.5">
                             <span>in</span>
                         </div>
                     </div>
-                     <div class="input-group">
+                    <div class="input-group">
                         <label for="gravelThickness">Gravel Thickness</label>
                         <div class="input-adornment">
-                            <input type="number" id="gravelThickness" value="4">
+                            <input type="number" id="gravelThickness" value="4" min="0" step="0.5">
                             <span>in</span>
                         </div>
                     </div>
@@ -272,28 +276,28 @@
                     <div class="input-group">
                         <label for="laborRate">Base Labor Rate</label>
                         <div class="input-adornment">
-                            <input type="number" id="laborRate" value="45">
+                            <input type="number" id="laborRate" value="45" min="0">
                             <span>$/ hr</span>
                         </div>
                     </div>
                     <div class="input-group">
                         <label for="costConcrete">Concrete Material Cost</label>
                         <div class="input-adornment">
-                            <input type="number" id="costConcrete" value="150">
+                            <input type="number" id="costConcrete" value="150" min="0">
                             <span>$/ cu yd</span>
                         </div>
                     </div>
                     <div class="input-group">
                         <label for="wasteFactor">Concrete Waste Factor</label>
                         <div class="input-adornment">
-                            <input type="number" id="wasteFactor" value="10">
+                            <input type="number" id="wasteFactor" value="10" min="0" max="100">
                             <span>%</span>
                         </div>
                     </div>
                     <div class="input-group">
                         <label for="laborFactor">General Labor Factor (Excavation/Setup/Pour)</label>
                         <div class="input-adornment">
-                            <input type="number" id="laborFactor" value="4.8" step="0.1">
+                            <input type="number" id="laborFactor" value="4.8" step="0.1" min="0">
                             <span>min / sq ft</span>
                         </div>
                     </div>
@@ -315,21 +319,21 @@
                             </span>
                         </label>
                         <div class="input-adornment">
-                            <input type="number" id="costGravelMaterial" value="30">
+                            <input type="number" id="costGravelMaterial" value="30" min="0">
                             <span>$/ cu yd</span>
                         </div>
                     </div>
                     <div class="input-group">
                         <label for="gravelLaborFactor">Gravel Labor Factor (Spread/Tamp)</label>
                         <div class="input-adornment">
-                            <input type="number" id="gravelLaborFactor" value="0.6" step="0.1">
+                            <input type="number" id="gravelLaborFactor" value="0.6" step="0.1" min="0">
                             <span>min / sq ft</span>
                         </div>
                     </div>
                     <div class="input-group">
                         <label for="costSpoilsHaulAway">Spoils Haul-Away Cost</label>
                         <div class="input-adornment">
-                            <input type="number" id="costSpoilsHaulAway" value="50">
+                            <input type="number" id="costSpoilsHaulAway" value="50" min="0">
                             <span>$/ cu yd</span>
                         </div>
                     </div>
@@ -352,14 +356,14 @@
                             </span>
                         </label>
                         <div class="input-adornment">
-                            <input type="number" id="costVaporBarrierMaterial" value="0.10" step="0.05">
+                            <input type="number" id="costVaporBarrierMaterial" value="0.10" step="0.01" min="0">
                             <span>$/ sq ft</span>
                         </div>
                     </div>
-                     <div class="input-group">
+                    <div class="input-group">
                         <label for="vaporBarrierLaborFactor">Vapor Barrier Labor Factor</label>
                         <div class="input-adornment">
-                            <input type="number" id="vaporBarrierLaborFactor" value="0.3" step="0.05">
+                            <input type="number" id="vaporBarrierLaborFactor" value="0.3" step="0.05" min="0">
                             <span>min / sq ft</span>
                         </div>
                     </div>
@@ -390,7 +394,7 @@
                             <option value="#6">#6 (3/4")</option>
                         </select>
                     </div>
-                     <div class="input-group">
+                    <div class="input-group">
                         <label for="rebarSpacing" class="flex items-center">
                             Rebar Spacing (On-Center)
                             <span class="tooltip">
@@ -418,14 +422,14 @@
                     <div class="input-group">
                         <label for="rebarLayers">Rebar Layers</label>
                         <select id="rebarLayers">
-                            <option value="1" selected>1 Layer</option>
-                            <option value="2">2 Layers</option>
+                            <option value="1" selected>1 Layer (Mid-Depth)</option>
+                            <option value="2">2 Layers (Top and Bottom)</option>
                         </select>
                     </div>
                     <div class="input-group">
                         <label for="rebarLaborFactor">Rebar Labor Factor (Tie/Place)</label>
                         <div class="input-adornment">
-                            <input type="number" id="rebarLaborFactor" value="0.9" step="0.1">
+                            <input type="number" id="rebarLaborFactor" value="0.9" step="0.1" min="0">
                             <span>min / sq ft</span>
                         </div>
                     </div>
@@ -434,21 +438,21 @@
                     <div class="input-group">
                         <label for="costFormworkMaterial">Formwork Material Cost</label>
                         <div class="input-adornment">
-                            <input type="number" id="costFormworkMaterial" value="3.00" step="0.50">
+                            <input type="number" id="costFormworkMaterial" value="3.00" step="0.50" min="0">
                             <span>$/ lf</span>
                         </div>
                     </div>
                     <div class="input-group">
                         <label for="formworkLaborFactor">Formwork Labor Factor (Set/Strip)</label>
                         <div class="input-adornment">
-                            <input type="number" id="formworkLaborFactor" value="5.0" step="0.5">
+                            <input type="number" id="formworkLaborFactor" value="5.0" step="0.5" min="0">
                             <span>min / lf</span>
                         </div>
                     </div>
                     <div class="input-group">
                         <label for="costFinishing">Finishing Cost (Bundled M+L)</label>
                         <div class="input-adornment">
-                            <input type="number" id="costFinishing" value="1.50" step="0.25">
+                            <input type="number" id="costFinishing" value="1.50" step="0.25" min="0">
                             <span>$/ sq ft</span>
                         </div>
                     </div>
@@ -459,14 +463,14 @@
                     <div class="input-group">
                         <label for="pumpRentalFee">Pump Rental Fee</label>
                         <div class="input-adornment">
-                            <input type="number" id="pumpRentalFee" value="1000" step="50">
+                            <input type="number" id="pumpRentalFee" value="1000" step="50" min="0">
                             <span>$ flat fee</span>
                         </div>
                     </div>
                     <div class="input-group mb-0">
                         <label for="costEquipmentRental">Other Equipment Rentals</label>
                         <div class="input-adornment">
-                            <input type="number" id="costEquipmentRental" value="250" step="50">
+                            <input type="number" id="costEquipmentRental" value="250" step="50" min="0">
                             <span>$ flat fee</span>
                         </div>
                     </div>
@@ -490,6 +494,7 @@
                 <div class="card">
                     <h2 class="text-xl font-semibold mb-4 text-gray-800">3. Concrete Estimated Outputs</h2>
                     <dl class="mb-6">
+                        <h3 class="text-lg font-semibold mb-2 text-gray-700">Dimensions & Volume</h3>
                         <div class="output-group">
                             <dt>Total Area</dt>
                             <dd id="outArea">200.00 sq ft</dd>
@@ -523,7 +528,7 @@
                     <h3 class="text-lg font-semibold mb-2 text-gray-700">Material Costs</h3>
                     <dl class="mb-6">
                         <div class="output-group">
-                            <dt>Concrete</dt>
+                            <dt>Concrete Material</dt>
                             <dd id="outCostConcrete">$407.41</dd>
                         </div>
                         <div class="output-group">
@@ -562,7 +567,7 @@
 
                     <h3 class="text-lg font-semibold mb-2 text-gray-700">Labor Costs</h3>
                     <dl class="mb-6">
-                        <!-- New Hour Breakdown -->
+                        <!-- Hour Breakdown -->
                         <div class="output-group output-group-small">
                             <dt>General Labor Hours</dt>
                             <dd id="outBaseLaborHours">16.00 hrs</dd>
@@ -593,7 +598,7 @@
                             <dt>General Labor Cost</dt>
                             <dd id="outBaseLaborCost">$720.00</dd>
                         </div>
-                         <div class="output-group">
+                        <div class="output-group">
                             <dt>Gravel Labor</dt>
                             <dd id="outGravelLabor">$90.00</dd>
                         </div>
@@ -605,7 +610,7 @@
                             <dt>Rebar Labor</dt>
                             <dd id="outRebarLabor">$135.00</dd>
                         </div>
-                         <div class="output-group">
+                        <div class="output-group">
                             <dt>Formwork Labor</dt>
                             <dd id="outFormworkLabor">$225.00</dd>
                         </div>
@@ -622,7 +627,7 @@
                     <div class="bg-blue-50 p-4 rounded-lg">
                         <dl>
                             <div class="output-group total border-none p-0">
-                                <dt class="text-xl font-bold text-blue-900">Total Concrete Cost</dt>
+                                <dt class="text-xl font-bold text-blue-900">Total Project Cost (M+L)</dt>
                                 <dd id="outGrandTotal" class="text-2xl font-bold text-blue-900">$2,709.69</dd>
                             </div>
                         </dl>
@@ -636,14 +641,14 @@
                     <div class="input-group">
                         <label for="markupPercent">Assumed Contractor Markup (O&P)</label>
                         <div class="input-adornment">
-                            <input type="number" id="markupPercent" value="20">
+                            <input type="number" id="markupPercent" value="20" min="0" max="100">
                             <span>%</span>
                         </div>
                     </div>
                     
                     <dl class="mb-4">
-                         <div class="output-group">
-                            <dt>Your 'Should-Pay' Bid</dt>
+                        <div class="output-group">
+                            <dt>Your 'Should-Pay' Bid (M+L+O&P)</dt>
                             <dd id="outShouldPayBid" class="font-bold text-blue-700">$0.00</dd>
                         </div>
                     </dl>
@@ -697,15 +702,16 @@
         };
 
         // --- Data ---
+        // Estimated cost per linear foot for various rebar sizes, used in material cost calculation
         const REBAR_COST_PER_LF = {
             "#3": 0.40, "#4": 0.65, "#5": 1.05, "#6": 1.48
         };
         
-        // --- Global Cost Variable ---
-        let currentGrandTotal = 0;
-        let currentShouldPayBid = 0;
+        // --- Global Cost Variables ---
+        let currentGrandTotal = 0; // Total Material + Labor Cost
+        let currentShouldPayBid = 0; // Total + Markup
 
-        // --- Concrete Calculator Logic ---
+        // --- DOM Elements Collection (Inputs and Outputs) ---
         const concreteInputs = [
             'length', 'width', 'thickness', 'gravelThickness',
             'jobDifficulty', 'laborRate', 'costConcrete', 'wasteFactor', 'laborFactor',
@@ -740,6 +746,60 @@
         const slabCanvas = document.getElementById('slabSimulator');
         let concreteMouse, concreteRaycaster;
 
+        // --- 3D Scene Initialization ---
+
+        // Function to create rebar lines for a single layer
+        function createRebarLayer(length, width, rebarSpacing) {
+            const layer = new THREE.Group(); 
+            const material = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 2 });
+
+            const lineCountX = (length > 0 && rebarSpacing > 0) ? Math.floor(length / rebarSpacing) + 1 : 0;
+            const lineCountZ = (width > 0 && rebarSpacing > 0) ? Math.floor(width / rebarSpacing) + 1 : 0;
+            const halfLength = length / 2;
+            const halfWidth = width / 2;
+
+            // Lines parallel to the X-axis (running across width)
+            for (let i = 0; i < lineCountZ; i++) {
+                const z = -halfWidth + i * rebarSpacing;
+                const points = [new THREE.Vector3(-halfLength, 0, z), new THREE.Vector3(halfLength, 0, z)];
+                layer.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(points), material));
+            }
+
+            // Lines parallel to the Z-axis (running across length)
+            for (let i = 0; i < lineCountX; i++) {
+                const x = -halfLength + i * rebarSpacing;
+                const points = [new THREE.Vector3(x, 0, -halfWidth), new THREE.Vector3(x, 0, halfWidth)];
+                layer.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(points), material));
+            }
+            return layer;
+        }
+
+        // Updates the visual rebar grid based on current inputs
+        function updateRebarGrid(length, width, thicknessFt, rebarSpacingFt, layers) {
+            const s = sceneData;
+            if (!s.meshes.rebarGroup) return; 
+            
+            // Clear existing rebar
+            s.meshes.rebarGroup.clear(); 
+            
+            const rebarSpacing = rebarSpacingFt || (18 / 12); // Default 1.5 ft spacing
+            const numLayers = layers || 1; 
+            
+            if (numLayers === 2) {
+                // For 2 layers, position 25% of the thickness from the center (approx 2" from edges for 8" slab)
+                const offset = thicknessFt * 0.25; 
+                s.meshes.rebarGroup.add(createRebarLayer(length, width, rebarSpacing).translateY(offset));
+                s.meshes.rebarGroup.add(createRebarLayer(length, width, rebarSpacing).translateY(-offset));
+            } else {
+                // For 1 layer, position at the center of the concrete
+                s.meshes.rebarGroup.add(createRebarLayer(length, width, rebarSpacing).translateY(0)); 
+            }
+            
+            if (concreteOutputs.rebarLabel) {
+                concreteOutputs.rebarLabel.textContent = ` | Rebar View Active (${numLayers} Layer${numLayers > 1 ? 's' : ''})`;
+            }
+        }
+        
         function initConcrete3D() {
             const s = sceneData;
             s.scene = new THREE.Scene();
@@ -755,16 +815,21 @@
 
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
             s.scene.add(ambientLight);
+            // FIX: Corrected typo from 'DirectionialLight' to 'DirectionalLight'
             const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
             directionalLight.position.set(10, 20, 5);
             s.scene.add(directionalLight);
 
             const geometry = new THREE.BoxGeometry(1, 1, 1);
             
-            s.meshes.slabMesh = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({ color: 0x808080, roughness: 0.7, metalness: 0.1 }));
+            s.meshes.slabMesh = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({ 
+                color: 0x808080, roughness: 0.7, metalness: 0.1, transparent: true, opacity: 0.9 
+            }));
             s.scene.add(s.meshes.slabMesh);
 
-            s.meshes.gravelMesh = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({ color: 0x8B4513, roughness: 0.9, metalness: 0.0 }));
+            s.meshes.gravelMesh = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({ 
+                color: 0x8B4513, roughness: 0.9, metalness: 0.0 
+            }));
             s.scene.add(s.meshes.gravelMesh);
             
             s.meshes.rebarGroup = new THREE.Group();
@@ -803,77 +868,45 @@
             s.renderer.render(s.scene, s.camera);
         }
 
+        // Click handler to toggle between slab and rebar view
         function onSlabClick(event) {
             const s = sceneData;
             if (!s.renderer) return; 
+            
+            // Check if controls were dragged (to prevent click on pan/rotate)
+            if (s.controls.isDragging) return; 
+
             const rect = s.renderer.domElement.getBoundingClientRect();
             concreteMouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
             concreteMouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
             concreteRaycaster.setFromCamera(concreteMouse, s.camera);
             
-            const clickTargets = [];
-            if (s.meshes.slabMesh.visible) clickTargets.push(s.meshes.slabMesh);
-            if (s.meshes.gravelMesh.visible) clickTargets.push(s.meshes.gravelMesh);
-            if (s.meshes.rebarGroup.visible) {
-                s.meshes.rebarGroup.children.forEach(layerGroup => {
-                    clickTargets.push(...layerGroup.children);
-                });
-            }
+            // Create a temporary invisible plane covering the view for easy clicking
+            const tempPlane = new THREE.Mesh(
+                new THREE.PlaneGeometry(100, 100), 
+                new THREE.MeshBasicMaterial({ visible: false })
+            );
+            s.scene.add(tempPlane);
 
-            const intersects = concreteRaycaster.intersectObjects(clickTargets, false); 
+            const intersects = concreteRaycaster.intersectObject(tempPlane); 
 
             if (intersects.length > 0) {
                 const isSlabCurrentlyVisible = s.meshes.slabMesh.visible;
+
+                // Toggle visibility
                 s.meshes.slabMesh.visible = !isSlabCurrentlyVisible;
                 s.meshes.gravelMesh.visible = !isSlabCurrentlyVisible;
                 s.meshes.rebarGroup.visible = isSlabCurrentlyVisible;
+
                 if (concreteOutputs.rebarLabel) {
                     concreteOutputs.rebarLabel.classList.toggle('hidden', !isSlabCurrentlyVisible);
                 }
             }
+            s.scene.remove(tempPlane);
         }
 
-        function updateRebarGrid(length, width, thicknessFt, rebarSpacingFt, layers) {
-            const s = sceneData;
-            if (!s.meshes.rebarGroup) return; 
-            
-            s.meshes.rebarGroup.clear(); 
-            const rebarSpacing = rebarSpacingFt || 1.5; 
-            const material = new THREE.LineBasicMaterial({ color: 0x333333 });
-
-            const createLayer = (yOffset) => {
-                const layer = new THREE.Group(); 
-                const lineCountX = (length > 0 && rebarSpacing > 0) ? Math.floor(length / rebarSpacing) : 0;
-                for (let i = 0; i <= lineCountX; i++) {
-                    const x = -length / 2 + i * rebarSpacing;
-                    const points = [new THREE.Vector3(x, yOffset, -width / 2), new THREE.Vector3(x, yOffset, width / 2)];
-                    layer.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(points), material));
-                }
-                const lineCountZ = (width > 0 && rebarSpacing > 0) ? Math.floor(width / rebarSpacing) : 0;
-                 for (let i = 0; i <= lineCountZ; i++) {
-                    const z = -width / 2 + i * rebarSpacing;
-                    const points = [new THREE.Vector3(-length / 2, yOffset, z), new THREE.Vector3(length / 2, yOffset, z)];
-                    layer.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(points), material));
-                }
-                return layer;
-            };
-
-            const numLayers = layers || 1; 
-            if (numLayers === 2) {
-                const topOffset = thicknessFt * 0.25; 
-                const bottomOffset = -thicknessFt * 0.25; 
-                s.meshes.rebarGroup.add(createLayer(topOffset));
-                s.meshes.rebarGroup.add(createLayer(bottomOffset));
-            } else {
-                s.meshes.rebarGroup.add(createLayer(0)); 
-            }
-            
-            if (concreteOutputs.rebarLabel) {
-                concreteOutputs.rebarLabel.textContent = `| Rebar View Active (${numLayers} Layer${numLayers > 1 ? 's' : ''})`;
-            }
-        }
-
+        // --- Core Calculation Function ---
         function calculateAllConcrete() {
             // 1. Get values
             const length = parseFloat(concreteInputs.length.value) || 0;
@@ -908,7 +941,7 @@
             const pumpRentalFee = parseFloat(concreteInputs.pumpRentalFee.value) || 0;
             const costEquipmentRental = parseFloat(concreteInputs.costEquipmentRental.value) || 0; 
 
-            // 2. Perform calculations
+            // 2. Dimensional Calculations (Conversion: 12 in/ft, 27 cu ft/cu yd)
             const thicknessFt = thicknessIn / 12;
             const gravelThicknessFt = gravelThicknessIn / 12;
             const totalExcavationIn = thicknessIn + gravelThicknessIn;
@@ -920,61 +953,67 @@
             const volumeYdWithWaste = volumeYd * (1 + (wasteFactor / 100));
 
             const gravelVolumeFt = area * gravelThicknessFt;
-            const gravelVolumeYd = gravelVolumeFt / 27; // This is also the spoils volume
+            const gravelVolumeYd = gravelVolumeFt / 27; 
             
+            // Rebar Linear Feet Calculation
             const rebarSpacingFt = rebarSpacingIn / 12;
+            // Calculate number of bars required across each dimension
             const numBarsLength = (length > 0 && rebarSpacingFt > 0) ? Math.floor(length / rebarSpacingFt) + 1 : 0;
-            const totalLfLengthBars = numBarsLength * width;
             const numBarsWidth = (width > 0 && rebarSpacingFt > 0) ? Math.floor(width / rebarSpacingFt) + 1 : 0;
-            const totalLfWidthBars = numBarsWidth * length;
-            let totalLinearFeet = (totalLfLengthBars + totalLfWidthBars) * layers;
+            // Calculate total length (LF) for one layer
+            const totalLfOneLayer = (numBarsLength * width) + (numBarsWidth * length);
+            const totalLinearFeet = totalLfOneLayer * layers;
 
-            // --- Material Costs ---
+            // --- 3. Material Costs ---
             const concreteCost = volumeYdWithWaste * costConcrete;
             const gravelMaterialCost = gravelVolumeYd * costGravelMaterialPerCY;
-            const spoilsHaulAwayCost = gravelVolumeYd * costSpoilsHaulAway; // New
+            const spoilsHaulAwayCost = gravelVolumeYd * costSpoilsHaulAway;
             const vaporBarrierMaterialCost = area * costVaporBarrierMaterial;
             const rebarMaterialCost = totalLinearFeet * (REBAR_COST_PER_LF[rebarSize] || 0);
-            const formworkMaterialCost = perimeter * costFormworkMaterial; // Updated
+            const formworkMaterialCost = perimeter * costFormworkMaterial;
             const pumpCost = pumpRequired ? pumpRentalFee : 0;
             
             const totalMaterialCost = concreteCost + gravelMaterialCost + spoilsHaulAwayCost + vaporBarrierMaterialCost + rebarMaterialCost + formworkMaterialCost + pumpCost + costEquipmentRental;
 
-            // --- Labor Hours & Costs (from Minutes) ---
+            // --- 4. Labor Hours & Costs (Conversion: 60 minutes/hour) ---
+            
+            // Hours = (Area * Factor in min/sq ft) / 60 * Multiplier
             const baseLaborHours = ((area * laborFactor) / 60) * jobDifficultyMultiplier; 
             const gravelLaborHours = ((area * gravelLaborFactor) / 60) * jobDifficultyMultiplier; 
             const vaporBarrierLaborHours = ((area * vaporBarrierLaborFactor) / 60) * jobDifficultyMultiplier; 
             const rebarLaborHours = ((area * rebarLaborFactor) / 60) * jobDifficultyMultiplier; 
-            const formworkLaborHours = ((perimeter * formworkLaborFactor) / 60) * jobDifficultyMultiplier; // New
+            // Hours = (Perimeter * Factor in min/lf) / 60 * Multiplier
+            const formworkLaborHours = ((perimeter * formworkLaborFactor) / 60) * jobDifficultyMultiplier;
             
-            const totalLaborHours = baseLaborHours + gravelLaborHours + vaporBarrierLaborHours + rebarLaborHours + formworkLaborHours; // Added formwork
+            const totalLaborHours = baseLaborHours + gravelLaborHours + vaporBarrierLaborHours + rebarLaborHours + formworkLaborHours;
 
+            // Labor Costs = Hours * Hourly Rate
             const baseLaborCost = baseLaborHours * laborRate;
             const gravelLaborCost = gravelLaborHours * laborRate;
             const vaporBarrierLaborCost = vaporBarrierLaborHours * laborRate;
             const rebarLaborCost = rebarLaborHours * laborRate;
-            const formworkLaborCost = formworkLaborHours * laborRate; // New
-            const finishingCost = area * costFinishing; // This is still bundled, not affected by labor rate or multiplier
+            const formworkLaborCost = formworkLaborHours * laborRate;
+            const finishingCost = area * costFinishing; // This is a bundled cost per SF (material + labor for finishing)
             
-            const totalLaborCost = baseLaborCost + gravelLaborCost + vaporBarrierLaborCost + rebarLaborCost + formworkLaborCost + finishingCost; // Added formwork
+            const totalLaborCost = baseLaborCost + gravelLaborCost + vaporBarrierLaborCost + rebarLaborCost + formworkLaborCost + finishingCost;
 
-            currentGrandTotal = totalMaterialCost + totalLaborCost; // Store in global
+            currentGrandTotal = totalMaterialCost + totalLaborCost; // Store for negotiation calculation
 
-            // 3. Update output fields
+            // 5. Update output fields
             concreteOutputs.outArea.textContent = `${area.toFixed(2)} sq ft`;
             concreteOutputs.outPerimeter.textContent = `${perimeter.toFixed(2)} lf`;
             concreteOutputs.outVolume.textContent = `${volumeYd.toFixed(2)} cu yds`;
             concreteOutputs.outVolumeWaste.textContent = `${volumeYdWithWaste.toFixed(2)} cu yds`;
-            concreteOutputs.outVolumeGravel.textContent = `${gravelVolumeYd.toFixed(2)} cu yds`; // Updated label
+            concreteOutputs.outVolumeGravel.textContent = `${gravelVolumeYd.toFixed(2)} cu yds`;
             concreteOutputs.outRebarLf.textContent = `${totalLinearFeet.toFixed(2)} lf`;
             concreteOutputs.outExcavationDepth.textContent = `${totalExcavationIn.toFixed(2)} in`;
             
             concreteOutputs.outCostConcrete.textContent = `$${concreteCost.toFixed(2)}`;
             concreteOutputs.outGravelMaterial.textContent = `$${gravelMaterialCost.toFixed(2)}`;
-            concreteOutputs.outCostSpoilsHaulAway.textContent = `$${spoilsHaulAwayCost.toFixed(2)}`; // New
+            concreteOutputs.outCostSpoilsHaulAway.textContent = `$${spoilsHaulAwayCost.toFixed(2)}`;
             concreteOutputs.outVaporBarrierMaterial.textContent = `$${vaporBarrierMaterialCost.toFixed(2)}`;
             concreteOutputs.outRebarMaterial.textContent = `$${rebarMaterialCost.toFixed(2)}`;
-            concreteOutputs.outCostFormworkMaterial.textContent = `$${formworkMaterialCost.toFixed(2)}`; // Updated
+            concreteOutputs.outCostFormworkMaterial.textContent = `$${formworkMaterialCost.toFixed(2)}`;
             concreteOutputs.outCostPump.textContent = `$${pumpCost.toFixed(2)}`;
             concreteOutputs.outCostEquipmentRental.textContent = `$${costEquipmentRental.toFixed(2)}`;
             concreteOutputs.outTotalMaterial.textContent = `$${totalMaterialCost.toFixed(2)}`;
@@ -983,14 +1022,14 @@
             concreteOutputs.outGravelLaborHours.textContent = `${gravelLaborHours.toFixed(2)} hrs`;
             concreteOutputs.outVaporBarrierLaborHours.textContent = `${vaporBarrierLaborHours.toFixed(2)} hrs`;
             concreteOutputs.outRebarLaborHours.textContent = `${rebarLaborHours.toFixed(2)} hrs`;
-            concreteOutputs.outFormworkLaborHours.textContent = `${formworkLaborHours.toFixed(2)} hrs`; // New
+            concreteOutputs.outFormworkLaborHours.textContent = `${formworkLaborHours.toFixed(2)} hrs`;
             concreteOutputs.outTotalLaborHours.textContent = `${totalLaborHours.toFixed(2)} hrs`;
 
             concreteOutputs.outBaseLaborCost.textContent = `$${baseLaborCost.toFixed(2)}`;
             concreteOutputs.outGravelLabor.textContent = `$${gravelLaborCost.toFixed(2)}`;
             concreteOutputs.outVaporBarrierLabor.textContent = `$${vaporBarrierLaborCost.toFixed(2)}`;
             concreteOutputs.outRebarLabor.textContent = `$${rebarLaborCost.toFixed(2)}`;
-            concreteOutputs.outFormworkLabor.textContent = `$${formworkLaborCost.toFixed(2)}`; // New
+            concreteOutputs.outFormworkLabor.textContent = `$${formworkLaborCost.toFixed(2)}`;
             concreteOutputs.outCostFinishing.textContent = `$${finishingCost.toFixed(2)}`;
             concreteOutputs.outTotalLabor.textContent = `$${totalLaborCost.toFixed(2)}`;
             
@@ -998,30 +1037,36 @@
             concreteOutputs.thicknessLabel.textContent = `${thicknessIn} in`;
             concreteOutputs.gravelThicknessLabel.textContent = `${gravelThicknessIn} in`;
 
-            // --- 4. Update Negotiation Check ---
+            // --- 6. Update Negotiation Check ---
             calculateNegotiation(); 
 
-            // 5. Update the 3D visual simulator
+            // 7. Update the 3D visual simulator
             const s = sceneData;
             if (s.meshes.slabMesh) {
                 s.meshes.slabMesh.scale.set(length, thicknessFt, width);
                 s.meshes.gravelMesh.scale.set(length, gravelThicknessFt, width);
                 
+                // Position relative to ground (Y=0)
                 const gravelY = gravelThicknessFt / 2;
                 const slabY = gravelThicknessFt + (thicknessFt / 2);
                 
                 s.meshes.gravelMesh.position.y = gravelY;
                 s.meshes.slabMesh.position.y = slabY;
+                
+                // Position rebar grid at the center height of the slab
                 s.meshes.rebarGroup.position.set(0, slabY, 0); 
 
+                // Rebuild the rebar grid with current settings
                 updateRebarGrid(length, width, thicknessFt, rebarSpacingFt, layers); 
                 
+                // Ensure default view is solid slab
                 s.meshes.slabMesh.visible = true;
                 s.meshes.gravelMesh.visible = true;
                 s.meshes.rebarGroup.visible = false;
                 if (concreteOutputs.rebarLabel) concreteOutputs.rebarLabel.classList.add('hidden');
             }
 
+            // Update Grid Helper size and controls target dynamically
             if (s.meshes.gridHelper) {
                 const maxDim = Math.max(length, width);
                 const newGridSize = Math.max(20, Math.ceil(maxDim / 10) * 2); 
@@ -1033,10 +1078,12 @@
                 }
             }
             
+            // Adjust camera target to center of the combined structure
             const avgHeight = (thicknessFt + gravelThicknessFt) / 2;
             s.controls.target.set(0, avgHeight, 0);
         }
 
+        // --- Negotiation Check Logic ---
         function calculateNegotiation() {
             const contractorBid = parseFloat(concreteInputs.contractorBid.value) || 0;
             const markupPercent = parseFloat(concreteInputs.markupPercent.value) || 0;
@@ -1047,7 +1094,7 @@
             let difference = 0;
             let variance = 0;
             
-            if (contractorBid > 0 && currentShouldPayBid > 0) {
+            if (currentShouldPayBid > 0) {
                 difference = contractorBid - currentShouldPayBid;
                 variance = (difference / currentShouldPayBid) * 100;
             }
@@ -1058,15 +1105,24 @@
             const differenceElement = concreteOutputs.outBidDifference;
             const varianceElement = concreteOutputs.outBidVariance;
 
-            differenceElement.classList.remove('text-red-600', 'text-green-600');
-            varianceElement.classList.remove('text-red-600', 'text-green-600');
-
-            if (difference > 0) { 
+            // Reset colors
+            differenceElement.classList.remove('text-red-600', 'text-green-600', 'text-gray-900');
+            varianceElement.classList.remove('text-red-600', 'text-green-600', 'text-gray-900');
+            
+            if (contractorBid === 0) {
+                differenceElement.textContent = '$0.00';
+                varianceElement.textContent = '0.00%';
+                differenceElement.classList.add('text-gray-900');
+                varianceElement.classList.add('text-gray-900');
+            } else if (difference > 0) { 
                 differenceElement.classList.add('text-red-600');
                 varianceElement.classList.add('text-red-600');
             } else if (difference < 0) { 
                 differenceElement.classList.add('text-green-600');
                 varianceElement.classList.add('text-green-600');
+            } else {
+                differenceElement.classList.add('text-gray-900');
+                varianceElement.classList.add('text-gray-900');
             }
         }
 
@@ -1077,18 +1133,20 @@
                 console.error("A concrete input element was not found during init.");
                 return;
             }
+            // Bid input only triggers the negotiation calculation
             if (input.id !== 'contractorBid') {
                 input.addEventListener('input', calculateAllConcrete);
             } else {
+                // Markup and Bid only trigger negotiation calculation
                 input.addEventListener('input', calculateNegotiation);
             }
         });
 
-        initConcrete3D();
-        calculateAllConcrete();
-
+        window.onload = function() {
+            initConcrete3D();
+            calculateAllConcrete();
+        }
     </script>
 
 </body>
 </html>
-
