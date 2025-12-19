@@ -1,19 +1,13 @@
-How to estimate a concrete slab:
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Concrete Slab Cost & Hour Estimator</title>
+    <title>SlabMaster Pro | Concrete Estimator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Three.js libraries -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f4f7f6;
@@ -23,1073 +17,502 @@ How to estimate a concrete slab:
             border-radius: 0.75rem;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             padding: 1.5rem;
-            margin-bottom: 1.5rem;
+            height: 100%;
         }
         .input-group {
             margin-bottom: 1rem;
         }
         .input-group label {
-            display: block;
-            font-weight: 500;
+            display: flex;
+            align-items: center;
+            font-weight: 700;
             color: #374151;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
         .input-group input, .input-group select {
             width: 100%;
-            padding: 0.75rem;
+            padding: 0.6rem;
             border: 1px solid #D1D5DB;
             border-radius: 0.5rem;
-            transition: border-color 0.2s, box-shadow 0.2s;
+            transition: all 0.2s;
             background-color: white;
-            -webkit-appearance: none; /* Fix for iOS select styling */
-            -moz-appearance: none;
-            appearance: none;
-        }
-        .input-group select {
-             background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%2BviewBox%3D%220%200%2020%2020%22%20fill%3D%22currentColor%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%20%2F%3E%3C%2Fsvg%3E');
-            background-repeat: no-repeat;
-            background-position: right 0.75rem center;
-            background-size: 1.25em 1.25em;
-            padding-right: 2.5rem; /* Make space for arrow */
+            font-size: 0.9rem;
         }
         .input-group input:focus, .input-group select:focus {
             outline: none;
             border-color: #3B82F6;
-            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
-        }
-        .input-group input[disabled] {
-            background-color: #F3F4F6;
-            color: #6B7280;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
         .input-adornment {
             position: relative;
+            width: 100%;
         }
         .input-adornment span {
             position: absolute;
             right: 0.75rem;
             top: 50%;
             transform: translateY(-50%);
-            color: #6B7280;
+            color: #9CA3AF;
+            font-size: 0.7rem;
+            font-weight: 800;
             pointer-events: none;
         }
-        /* Style for checkbox */
-        .input-group-check {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-        .input-group-check input {
-            width: 1rem;
-            height: 1rem;
-            margin-right: 0.75rem;
-        }
-        .input-group-check label {
-            font-weight: 500;
-            color: #374151;
-            margin: 0;
-        }
-        .output-group {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.75rem 0;
-            border-bottom: 1px solid #E5E7EB;
-        }
-        .output-group.output-group-small {
-            padding: 0.4rem 0;
-        }
-        .output-group.output-group-small dt {
-            font-size: 0.875rem;
-            color: #6B7280;
-        }
-        .output-group.output-group-small dd {
-            font-size: 1rem;
-            color: #374151;
-        }
-        .output-group:last-child {
-            border-bottom: none;
-        }
-        .output-group dt {
-            color: #4B5563;
-        }
-        .output-group dd {
-            font-weight: 600;
-            color: #111827;
-            font-size: 1.125rem;
-        }
-        .total dd {
-            color: #16A34A; /* Green for totals */
-            font-size: 1.25rem;
-        }
-        .canvas-container {
-            width: 100%;
-            height: 300px;
-            background-color: #F9FAFB;
-            border: 1px solid #E5E7EB;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            position: relative;
-        }
-        #slabSimulator {
-            width: 100%;
-            height: 100%;
-        }
 
-        /* Tooltip Styles */
+        /* Tooltip & Info Icon Styles */
         .info-icon {
-            display: inline-block;
-            width: 1.1rem;
-            height: 1.1rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
             background-color: #9CA3AF;
             color: white;
             text-align: center;
-            font-size: 0.8rem;
-            font-weight: bold;
-            line-height: 1.1rem;
+            font-size: 9px;
+            font-weight: 800;
             cursor: help;
-            margin-left: 0.5rem;
+            margin-left: 6px;
+            transition: background-color 0.2s;
         }
-        .tooltip {
-            position: relative;
-            display: inline-block;
-        }
+        .info-icon:hover { background-color: #64748b; }
+        .tooltip { position: relative; display: inline-flex; align-items: center; }
         .tooltip .tooltip-content {
             visibility: hidden;
-            width: 320px;
-            background-color: #374151;
-            color: #fff;
+            width: 240px;
+            background-color: #1e293b;
+            color: #f8fafc;
             padding: 0.75rem;
             border-radius: 0.5rem;
             position: absolute;
-            z-index: 10;
-            bottom: 125%; /* Position above the icon */
+            z-index: 100;
+            bottom: 125%;
             left: 50%;
-            margin-left: -160px; /* Center the tooltip */
+            transform: translateX(-50%);
             opacity: 0;
             transition: opacity 0.2s;
-            font-size: 0.875rem;
+            font-size: 0.7rem;
+            line-height: 1.4;
+            pointer-events: none;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            text-transform: none;
+            letter-spacing: normal;
+            font-weight: 400;
         }
-        /* Dynamic width for rebar tooltip */
-        .tooltip .tooltip-rebar {
-            width: 480px;
-            left: 0; /* Align to the left of the icon */
-            margin-left: 0; /* Remove the centering margin */
+        .tooltip .tooltip-content::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #1e293b transparent transparent transparent;
         }
-        .tooltip:hover .tooltip-content {
-            visibility: visible;
-            opacity: 1;
-        }
-        .tooltip-content table {
-            width: 100%;
-            font-size: 0.8rem;
-        }
-        .tooltip-content th, .tooltip-content td {
-            text-align: left;
-            padding: 0.25rem 0.5rem;
-            border-bottom: 1px solid #4B5563;
-        }
-        .tooltip-content th {
-            color: #E5E7EB;
-        }
-        .tooltip-content td {
-            color: #D1D5DB;
-        }
-        .tooltip-content tr:last-child td {
-            border-bottom: none;
-        }
-        .tooltip-content p {
-            font-size: 0.8rem;
-            color: #D1D5DB;
-            margin-bottom: 0.5rem;
-        }
+        .tooltip:hover .tooltip-content { visibility: visible; opacity: 1; }
 
-        /* FIX: Hide default number input arrows */
-        input[type=number]::-webkit-inner-spin-button, 
-        input[type=number]::-webkit-outer-spin-button { 
-            -webkit-appearance: none; 
-            margin: 0; 
-        }
-        input[type=number] {
-            -moz-appearance: textfield; /* Firefox */
-        }
+        input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 18px; width: 18px; border-radius: 50%; background: #3b82f6; cursor: pointer; margin-top: -6px; box-shadow: 0 1px 3px rgba(0,0,0,0.2); border: 2px solid white; }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: #e5e7eb; border-radius: 3px; }
+
+        input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
+        details summary::-webkit-details-marker { display: none; }
+        details summary { list-style: none; outline: none; }
     </style>
 </head>
 <body class="p-4 md:p-8">
 
-    <div class="max-w-6xl mx-auto">
-        <header class="mb-6">
-            <h1 class="text-3xl font-bold text-gray-900">Comprehensive Concrete Cost Estimator</h1>
-            <p class="text-lg text-gray-600">Enter slab dimensions and cost assumptions to estimate materials and labor.</p>
+    <div class="max-w-[1400px] mx-auto">
+        <header class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4 border-b pb-4">
+            <div>
+                <h1 class="text-3xl font-black text-slate-900 tracking-tight">SlabMaster <span class="text-blue-600">Pro</span></h1>
+                <p class="text-slate-500 font-semibold uppercase text-xs tracking-widest">Executive SoCal Estimator • 2025</p>
+            </div>
         </header>
 
-        <!-- Main Content -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Column 1: Concrete Inputs -->
-            <div class="md:col-span-1">
-                <div class="card">
-                    <h2 class="text-xl font-semibold mb-4 text-gray-800">1. Slab Dimensions</h2>
+        <!-- TOP ROW: CONFIGURATORS -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            
+            <!-- STEP 1: DIMENSIONS -->
+            <div class="card border-t-4 border-blue-500">
+                <h2 class="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-6 border-b pb-2">1. Slab Dimensions</h2>
+                <div class="space-y-4">
                     <div class="input-group">
-                        <label for="length">Length</label>
-                        <div class="input-adornment">
-                            <input type="number" id="length" value="20">
-                            <span>ft</span>
+                        <label>Length <span class="tooltip"><span class="info-icon">i</span><span class="tooltip-content">Factors in Site Layout & Staking labor at 0.05 HR/LF.</span></span></label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="input-adornment"><input type="number" id="lengthFt" value="20" oninput="calculate()"><span>ft</span></div>
+                            <div class="input-adornment"><input type="number" id="lengthIn" value="0" oninput="calculate()"><span>in</span></div>
                         </div>
                     </div>
                     <div class="input-group">
-                        <label for="width">Width</label>
-                        <div class="input-adornment">
-                            <input type="number" id="width" value="10">
-                            <span>ft</span>
+                        <label>Width <span class="tooltip"><span class="info-icon">i</span><span class="tooltip-content">Factors in Site Layout & Staking labor at 0.05 HR/LF.</span></span></label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="input-adornment"><input type="number" id="widthFt" value="10" oninput="calculate()"><span>ft</span></div>
+                            <div class="input-adornment"><input type="number" id="widthIn" value="0" oninput="calculate()"><span>in</span></div>
                         </div>
                     </div>
-                    <div class="input-group">
-                        <label for="thickness">Concrete Thickness</label>
-                        <div class="input-adornment">
-                            <input type="number" id="thickness" value="4">
-                            <span>in</span>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="input-group">
+                            <label>Slab Thick. <span class="tooltip"><span class="info-icon">i</span><span class="tooltip-content">Directly impacts Concrete CY volume and Placement labor (0.75 HR/CY).</span></span></label>
+                            <div class="input-adornment"><input type="number" id="thickness" value="4" oninput="calculate()"><span>in</span></div>
+                        </div>
+                        <div class="input-group">
+                            <label>Base Depth <span class="tooltip"><span class="info-icon">i</span><span class="tooltip-content">Factors in Gravel Base & Tamp labor at 0.03 HR/SF. 4" is the SoCal standard.</span></span></label>
+                            <div class="input-adornment"><input type="number" id="baseThickness" value="4" oninput="calculate()"><span>in</span></div>
                         </div>
                     </div>
-                     <div class="input-group">
-                        <label for="gravelThickness">Gravel Thickness</label>
-                        <div class="input-adornment">
-                            <input type="number" id="gravelThickness" value="4">
-                            <span>in</span>
-                        </div>
+                    <div class="input-group pt-2 border-t border-slate-50">
+                        <label class="text-blue-600 font-bold">Above Grade Exposure <span class="tooltip"><span class="info-icon">i</span><span class="tooltip-content">Reduces Excavation depth but ensures Formwork labor is calculated at full height (0.20 HR/LF).</span></span></label>
+                        <div class="input-adornment"><input type="number" id="aboveGrade" value="0" oninput="calculate()" class="border-blue-100"><span>in</span></div>
                     </div>
-                </div>
-
-                <div class="card">
-                    <h2 class="text-xl font-semibold mb-4 text-gray-800">2. Concrete Cost Model</h2>
-                    
-                    <h3 class="text-lg font-semibold mb-2 text-gray-700">General</h3>
-                    <div class="input-group">
-                        <label for="jobDifficulty">Job Access / Difficulty</label>
-                        <select id="jobDifficulty">
-                            <option value="1.0" selected>Easy (1.0x Labor)</option>
-                            <option value="1.5">Medium (1.5x Labor)</option>
-                            <option value="2.0">Hard (2.0x Labor)</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label for="laborRate">Base Labor Rate</label>
-                        <div class="input-adornment">
-                            <input type="number" id="laborRate" value="45">
-                            <span>$/ hr</span>
-                        </div>
-                    </div>
-                    <div class="input-group">
-                        <label for="costConcrete">Concrete Material Cost</label>
-                        <div class="input-adornment">
-                            <input type="number" id="costConcrete" value="150">
-                            <span>$/ cu yd</span>
-                        </div>
-                    </div>
-                    <div class="input-group">
-                        <label for="wasteFactor">Concrete Waste Factor</label>
-                        <div class="input-adornment">
-                            <input type="number" id="wasteFactor" value="10">
-                            <span>%</span>
-                        </div>
-                    </div>
-                    <div class="input-group">
-                        <label for="laborFactor">General Labor Factor (Excavation/Setup/Pour)</label>
-                        <div class="input-adornment">
-                            <input type="number" id="laborFactor" value="4.8" step="0.1">
-                            <span>min / sq ft</span>
-                        </div>
-                    </div>
-
-                    <h3 class="text-lg font-semibold mb-2 text-gray-700 border-t pt-4">Gravel & Spoils</h3>
-                    <div class="input-group">
-                        <label for="costGravelMaterial" class="flex items-center">
-                            Gravel Material Cost
-                            <span class="tooltip">
-                                <span class="info-icon">i</span>
-                                <span class="tooltip-content">
-                                    <table>
-                                        <tr><th>Material</th><th>When to Use</th><th>Cost/CY</th></tr>
-                                        <tr><td>Aggregate Base</td><td>Default for most</td><td>$25–$35</td></tr>
-                                        <tr><td>Select Fill</td><td>Poor soil</td><td>$20–$30</td></tr>
-                                        <tr><td>3/4" Clean Stone</td><td>Drainage</td><td>$35–$50</td></tr>
-                                    </table>
-                                </span>
-                            </span>
-                        </label>
-                        <div class="input-adornment">
-                            <input type="number" id="costGravelMaterial" value="30">
-                            <span>$/ cu yd</span>
-                        </div>
-                    </div>
-                    <div class="input-group">
-                        <label for="gravelLaborFactor">Gravel Labor Factor (Spread/Tamp)</label>
-                        <div class="input-adornment">
-                            <input type="number" id="gravelLaborFactor" value="0.6" step="0.1">
-                            <span>min / sq ft</span>
-                        </div>
-                    </div>
-                    <div class="input-group">
-                        <label for="costSpoilsHaulAway">Spoils Haul-Away Cost</label>
-                        <div class="input-adornment">
-                            <input type="number" id="costSpoilsHaulAway" value="50">
-                            <span>$/ cu yd</span>
-                        </div>
-                    </div>
-
-                    <h3 class="text-lg font-semibold mb-2 text-gray-700 border-t pt-4">Vapor Barrier</h3>
-                    <div class="input-group">
-                        <label for="costVaporBarrierMaterial" class="flex items-center">
-                            Vapor Barrier Material
-                            <span class="tooltip">
-                                <span class="info-icon">i</span>
-                                <span class="tooltip-content">
-                                    <table>
-                                        <tr><th>Thickness</th><th>Common Use</th><th>Cost/SF</th></tr>
-                                        <tr><td>6-mil</td><td>Residential (min)</td><td>$0.05–$0.10</td></tr>
-                                        <tr><td>10-mil</td><td>Standard Res.</td><td>$0.10–$0.20</td></tr>
-                                        <tr><td>15-mil</td><td>Heavy-duty</td><td>$0.15–$0.30</td></tr>
-                                        <tr><td>20-mil</td><td>Industrial</td><td>$0.20–$0.40</td></tr>
-                                    </table>
-                                </span>
-                            </span>
-                        </label>
-                        <div class="input-adornment">
-                            <input type="number" id="costVaporBarrierMaterial" value="0.10" step="0.05">
-                            <span>$/ sq ft</span>
-                        </div>
-                    </div>
-                     <div class="input-group">
-                        <label for="vaporBarrierLaborFactor">Vapor Barrier Labor Factor</label>
-                        <div class="input-adornment">
-                            <input type="number" id="vaporBarrierLaborFactor" value="0.3" step="0.05">
-                            <span>min / sq ft</span>
-                        </div>
-                    </div>
-                    
-                    <h3 class="text-lg font-semibold mb-2 text-gray-700 border-t pt-4">Rebar (Bottom-Up)</h3>
-                    <div class="input-group">
-                        <label for="rebarSize" class="flex items-center">
-                            Rebar Size
-                            <span class="tooltip">
-                                <span class="info-icon">i</span>
-                                <span class="tooltip-content tooltip-rebar">
-                                    <table>
-                                        <tr>
-                                            <th>Bar Size</th><th>Diameter</th><th>Weight (lbs/LF)</th><th>Typical Cost ($/LF)</th><th>Common Use</th>
-                                        </tr>
-                                        <tr><td>#3</td><td>3/8"</td><td>0.376</td><td>$0.30–$0.50</td><td>Light residential, WWM alt.</td></tr>
-                                        <tr><td>#4</td><td>1/2"</td><td>0.668</td><td>$0.50–$0.80</td><td>Standard res/comm. slabs</td></tr>
-                                        <tr><td>#5</td><td>5/8"</td><td>1.043</td><td>$0.80–$1.30</td><td>Heavy comm., structural</td></tr>
-                                        <tr><td>#6</td><td>3/4"</td><td>1.502</td><td>$1.15–$1.80</td><td>Industrial, heavy loads</td></tr>
-                                    </table>
-                                </span>
-                            </span>
-                        </label>
-                        <select id="rebarSize">
-                            <option value="#3">#3 (3/8")</option>
-                            <option value="#4" selected>#4 (1/2")</option>
-                            <option value="#5">#5 (5/8")</option>
-                            <option value="#6">#6 (3/4")</option>
-                        </select>
-                    </div>
-                     <div class="input-group">
-                        <label for="rebarSpacing" class="flex items-center">
-                            Rebar Spacing (On-Center)
-                            <span class="tooltip">
-                                <span class="info-icon">i</span>
-                                <span class="tooltip-content">
-                                    <table>
-                                        <tr>
-                                            <th>Spacing</th>
-                                            <th>Label</th>
-                                            <th>When to Use</th>
-                                        </tr>
-                                        <tr><td>12" o.c.</td><td>Heavy-Duty</td><td>Warehouse, industrial, heavy loads</td></tr>
-                                        <tr><td>18" o.c.</td><td>Standard (Default)</td><td>Residential, commercial, 80% of slabs</td></tr>
-                                        <tr><td>24" o.c.</td><td>Light-Duty</td><td>Small pads, budget projects</td></tr>
-                                    </table>
-                                </span>
-                            </span>
-                        </label>
-                        <select id="rebarSpacing">
-                            <option value="12">12 inches</option>
-                            <option value="18" selected>18 inches</option>
-                            <option value="24">24 inches</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label for="rebarLayers">Rebar Layers</label>
-                        <select id="rebarLayers">
-                            <option value="1" selected>1 Layer</option>
-                            <option value="2">2 Layers</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label for="rebarLaborFactor">Rebar Labor Factor (Tie/Place)</label>
-                        <div class="input-adornment">
-                            <input type="number" id="rebarLaborFactor" value="0.9" step="0.1">
-                            <span>min / sq ft</span>
-                        </div>
-                    </div>
-                    
-                    <h3 class="text-lg font-semibold mb-2 text-gray-700 border-t pt-4">Other Costs</h3>
-                    <div class="input-group">
-                        <label for="costFormworkMaterial">Formwork Material Cost</label>
-                        <div class="input-adornment">
-                            <input type="number" id="costFormworkMaterial" value="3.00" step="0.50">
-                            <span>$/ lf</span>
-                        </div>
-                    </div>
-                    <div class="input-group">
-                        <label for="formworkLaborFactor">Formwork Labor Factor (Set/Strip)</label>
-                        <div class="input-adornment">
-                            <input type="number" id="formworkLaborFactor" value="5.0" step="0.5">
-                            <span>min / lf</span>
-                        </div>
-                    </div>
-                    <div class="input-group">
-                        <label for="costFinishing">Finishing Cost (Bundled M+L)</label>
-                        <div class="input-adornment">
-                            <input type="number" id="costFinishing" value="1.50" step="0.25">
-                            <span>$/ sq ft</span>
-                        </div>
-                    </div>
-                    <div class="input-group-check">
-                        <input type="checkbox" id="pumpRequired">
-                        <label for="pumpRequired">Concrete Pump Required?</label>
-                    </div>
-                    <div class="input-group">
-                        <label for="pumpRentalFee">Pump Rental Fee</label>
-                        <div class="input-adornment">
-                            <input type="number" id="pumpRentalFee" value="1000" step="50">
-                            <span>$ flat fee</span>
-                        </div>
-                    </div>
-                    <div class="input-group mb-0">
-                        <label for="costEquipmentRental">Other Equipment Rentals</label>
-                        <div class="input-adornment">
-                            <input type="number" id="costEquipmentRental" value="250" step="50">
-                            <span>$ flat fee</span>
-                        </div>
+                    <div class="p-3 bg-blue-50 rounded-lg border border-blue-100 flex justify-between items-center mt-2">
+                        <p class="text-[10px] font-black text-blue-400 uppercase tracking-widest flex items-center">
+                            Net Dig Depth 
+                            <span class="tooltip ml-1"><span class="info-icon !bg-blue-300">i</span><span class="tooltip-content">Calculated as (Slab + Base) - Exposure. Drives Manual Excavation labor at 0.05 HR/SF.</span></span>
+                        </p>
+                        <p id="excavationHelperValue" class="text-xl font-black text-blue-700 italic">--</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Column 2: Concrete Visual & Outputs -->
-            <div class="md:col-span-2">
-                <div class="card">
-                    <h2 class="text-xl font-semibold mb-4 text-gray-800">Slab Visual Simulator (3D)</h2>
-                    <div class="canvas-container">
-                        <canvas id="slabSimulator"></canvas>
+            <!-- STEP 2: MATERIAL CONFIG -->
+            <div class="card border-t-4 border-green-500">
+                <h2 class="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-6 border-b pb-2">2. Material & Spec</h2>
+                <div class="space-y-6">
+                    <div class="bg-gray-50 p-3 rounded-lg border border-gray-100">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="input-group mb-0"><label>Bar Size <span class="tooltip"><span class="info-icon">i</span><span class="tooltip-content">Rebar Setup labor factored at 0.02 HR/SF for residential grids.</span></span></label><select id="rebarSize" onchange="calculate()"><option value="#3">#3 (3/8")</option><option value="#4" selected>#4 (1/2")</option><option value="#5">#5 (5/8")</option></select></div>
+                            <div class="input-group mb-0"><label>Spacing <span class="tooltip"><span class="info-icon">i</span><span class="tooltip-content">18" OC is standard. 12" OC increases material cost but assumes same 0.02 HR/SF labor.</span></span></label><select id="rebarSpacing" onchange="calculate()"><option value="12">12" OC</option><option value="18" selected>18" OC</option><option value="24">24" OC</option></select></div>
+                        </div>
                     </div>
-                    <p class="text-center text-gray-600 mt-2">
-                        Concrete: <span id="thicknessLabel" class="font-medium text-gray-800">4 in</span> |
-                        Gravel: <span id="gravelThicknessLabel" class="font-medium text-gray-800">4 in</span>
-                        <span id="rebarLabel" class="font-medium text-blue-600 hidden"> | Rebar View Active (1 Layer)</span>
-                    </p>
-                </div>
-
-                <div class="card">
-                    <h2 class="text-xl font-semibold mb-4 text-gray-800">3. Concrete Estimated Outputs</h2>
-                    <dl class="mb-6">
-                        <div class="output-group">
-                            <dt>Total Area</dt>
-                            <dd id="outArea">200.00 sq ft</dd>
-                        </div>
-                        <div class="output-group">
-                            <dt>Slab Perimeter</dt>
-                            <dd id="outPerimeter">60.00 lf</dd>
-                        </div>
-                        <div class="output-group">
-                            <dt>Total Volume (Concrete)</dt>
-                            <dd id="outVolume">2.47 cu yds</dd>
-                        </div>
-                        <div class="output-group">
-                            <dt>Total Concrete (w/ waste)</dt>
-                            <dd id="outVolumeWaste">2.72 cu yds</dd>
-                        </div>
-                        <div class="output-group">
-                            <dt>Total Volume (Gravel & Spoils)</dt>
-                            <dd id="outVolumeGravel">2.47 cu yds</dd>
-                        </div>
-                        <div class="output-group">
-                            <dt>Total Linear Feet (Rebar)</dt>
-                            <dd id="outRebarLf">215.00 lf</dd>
-                        </div>
-                        <div class="output-group">
-                            <dt>Total Excavation Depth</dt>
-                            <dd id="outExcavationDepth">8.00 in</dd>
-                        </div>
-                    </dl>
-
-                    <h3 class="text-lg font-semibold mb-2 text-gray-700">Material Costs</h3>
-                    <dl class="mb-6">
-                        <div class="output-group">
-                            <dt>Concrete</dt>
-                            <dd id="outCostConcrete">$407.41</dd>
-                        </div>
-                        <div class="output-group">
-                            <dt>Gravel Material</dt>
-                            <dd id="outGravelMaterial">$74.07</dd>
-                        </div>
-                        <div class="output-group">
-                            <dt>Spoils Haul-Away</dt>
-                            <dd id="outCostSpoilsHaulAway">$123.46</dd>
-                        </div>
-                        <div class="output-group">
-                            <dt>Vapor Barrier Material</dt>
-                            <dd id="outVaporBarrierMaterial">$20.00</dd>
-                        </div>
-                        <div class="output-group">
-                            <dt>Rebar Material</dt>
-                            <dd id="outRebarMaterial">$139.75</dd>
-                        </div>
-                        <div class="output-group">
-                            <dt>Formwork Material</dt>
-                            <dd id="outCostFormworkMaterial">$180.00</dd>
-                        </div>
-                        <div class="output-group">
-                            <dt>Concrete Pump Rental</dt>
-                            <dd id="outCostPump">$0.00</dd>
-                        </div>
-                        <div class="output-group">
-                            <dt>Other Rentals</dt>
-                            <dd id="outCostEquipmentRental">$250.00</dd>
-                        </div>
-                        <div class="output-group total font-medium">
-                            <dt>Total Material Cost</dt>
-                            <dd id="outTotalMaterial">$1,194.69</dd>
-                        </div>
-                    </dl>
-
-                    <h3 class="text-lg font-semibold mb-2 text-gray-700">Labor Costs</h3>
-                    <dl class="mb-6">
-                        <!-- New Hour Breakdown -->
-                        <div class="output-group output-group-small">
-                            <dt>General Labor Hours</dt>
-                            <dd id="outBaseLaborHours">16.00 hrs</dd>
-                        </div>
-                        <div class="output-group output-group-small">
-                            <dt>Gravel Labor Hours</dt>
-                            <dd id="outGravelLaborHours">2.00 hrs</dd>
-                        </div>
-                        <div class="output-group output-group-small">
-                            <dt>Vapor Barrier Labor Hours</dt>
-                            <dd id="outVaporBarrierLaborHours">1.00 hrs</dd>
-                        </div>
-                        <div class="output-group output-group-small">
-                            <dt>Rebar Labor Hours</dt>
-                            <dd id="outRebarLaborHours">3.00 hrs</dd>
-                        </div>
-                        <div class="output-group output-group-small">
-                            <dt>Formwork Labor Hours</dt>
-                            <dd id="outFormworkLaborHours">5.00 hrs</dd>
-                        </div>
-                        <div class="output-group total font-medium border-t mt-2">
-                            <dt>Total Labor Hours</dt>
-                            <dd id="outTotalLaborHours">27.00 hrs</dd>
-                        </div>
-                        
-                        <!-- Cost Breakdown -->
-                        <div class="output-group mt-4">
-                            <dt>General Labor Cost</dt>
-                            <dd id="outBaseLaborCost">$720.00</dd>
-                        </div>
-                         <div class="output-group">
-                            <dt>Gravel Labor</dt>
-                            <dd id="outGravelLabor">$90.00</dd>
-                        </div>
-                        <div class="output-group">
-                            <dt>Vapor Barrier Labor</dt>
-                            <dd id="outVaporBarrierLabor">$45.00</dd>
-                        </div>
-                        <div class="output-group">
-                            <dt>Rebar Labor</dt>
-                            <dd id="outRebarLabor">$135.00</dd>
-                        </div>
-                         <div class="output-group">
-                            <dt>Formwork Labor</dt>
-                            <dd id="outFormworkLabor">$225.00</dd>
-                        </div>
-                        <div class="output-group">
-                            <dt>Finishing (Bundled M+L)</dt>
-                            <dd id="outCostFinishing">$300.00</dd>
-                        </div>
-                        <div class="output-group total font-medium">
-                            <dt>Total Labor Cost</dt>
-                            <dd id="outTotalLabor">$1,515.00</dd>
-                        </div>
-                    </dl>
-
-                    <div class="bg-blue-50 p-4 rounded-lg">
-                        <dl>
-                            <div class="output-group total border-none p-0">
-                                <dt class="text-xl font-bold text-blue-900">Total Concrete Cost</dt>
-                                <dd id="outGrandTotal" class="text-2xl font-bold text-blue-900">$2,709.69</dd>
+                    <div>
+                        <div class="grid grid-cols-2 gap-3 mb-3">
+                            <div class="input-group mb-0">
+                                <label>Target PSI <span class="tooltip"><span class="info-icon">i</span><span class="tooltip-content">Mixes above 4500 PSI typically require higher cement content and higher per-CY cost.</span></span></label>
+                                <select id="slabPsi" onchange="handlePsiChange()">
+                                    <option value="2500">2500</option><option value="3000" selected>3000</option>
+                                    <option value="3500">3500</option><option value="4000">4000</option>
+                                    <option value="4500">4500</option><option value="5000">5000</option>
+                                    <option value="6000">6000</option>
+                                </select>
                             </div>
-                        </dl>
+                            <div class="input-group mb-0"><label>Unit Cost</label><div class="input-adornment"><input type="number" id="costConcrete" value="170" oninput="calculate()"><span>$/CY</span></div></div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 mb-3">
+                            <label class="flex items-center gap-2 p-2 rounded-lg border border-slate-100 cursor-pointer bg-slate-50/50">
+                                <input type="checkbox" id="fiberMesh" onchange="calculate()" class="w-4 h-4 rounded text-blue-600">
+                                <span class="text-[10px] font-bold text-slate-600 uppercase">Fiber Mesh <span class="tooltip"><span class="info-icon !ml-1">i</span><span class="tooltip-content">Reduces plastic shrinkage. Factored as a material adder of $15/CY.</span></span></span>
+                            </label>
+                            <label class="flex items-center gap-2 p-2 rounded-lg border border-slate-100 cursor-pointer bg-slate-50/50">
+                                <input type="checkbox" id="curvedForms" onchange="calculate()" class="w-4 h-4 rounded text-blue-600">
+                                <span class="text-[10px] font-bold text-slate-600 uppercase">Curves <span class="tooltip"><span class="info-icon !ml-1">i</span><span class="tooltip-content">Adds $2.80/LF for bender board material.</span></span></span>
+                            </label>
+                            <label class="flex items-center gap-2 p-2 rounded-lg border border-slate-100 cursor-pointer bg-slate-50/50">
+                                <input type="checkbox" id="pumpRequired" onchange="calculate()" class="w-4 h-4 rounded text-blue-600">
+                                <span class="text-[10px] font-bold text-slate-600 uppercase">Pump Req. <span class="tooltip"><span class="info-icon !ml-1">i</span><span class="tooltip-content">Adds $1,000 flat fee for line-pump rental and operator.</span></span></span>
+                            </label>
+                            <label class="flex items-center gap-2 p-2 rounded-lg border border-slate-100 cursor-pointer bg-slate-50/50">
+                                <input type="checkbox" id="vaporBarrier" onchange="calculate()" class="w-4 h-4 rounded text-blue-600">
+                                <span class="text-[10px] font-bold text-slate-600 uppercase">Vapor Bar. <span class="tooltip"><span class="info-icon !ml-1">i</span><span class="tooltip-content">Adds 0.01 HR/SF for installation labor and material cost.</span></span></span>
+                            </label>
+                        </div>
                     </div>
+
+                    <details class="group">
+                        <summary class="flex items-center justify-between cursor-pointer text-blue-600 font-bold uppercase text-[10px] tracking-widest py-2 hover:bg-blue-50 rounded px-1 transition-colors">
+                            <span>Advanced Logic Overrides</span>
+                            <svg class="w-3 h-3 transform group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </summary>
+                        <div class="grid grid-cols-2 gap-x-3 gap-y-3 pt-4 border-t mt-1">
+                            <div class="input-group mb-0"><label>Waste % <span class="tooltip"><span class="info-icon">i</span><span class="tooltip-content">Standard 10% volume adder.</span></span></label><input type="number" id="wasteFactor" placeholder="10%" oninput="calculate()"></div>
+                            <div class="input-group mb-0"><label>Env./Fuel Fee <span class="tooltip"><span class="info-icon">i</span><span class="tooltip-content">Flat CA state fee per 9CY load.</span></span></label><input type="number" id="costEnvFee" placeholder="$50" oninput="calculate()"></div>
+                            <div class="input-group mb-0"><label>Short Load <span class="tooltip"><span class="info-icon">i</span><span class="tooltip-content">Penalty for ordering under 7 CY.</span></span></label><input type="number" id="costShortLoad" placeholder="$250" oninput="calculate()"></div>
+                            <div class="input-group mb-0"><label>Base $/CY <span class="tooltip"><span class="info-icon">i</span><span class="tooltip-content">Delivered cost for Class 2 Aggregate base.</span></span></label><input type="number" id="costBaseMaterial" placeholder="$38" oninput="calculate()"></div>
+                        </div>
+                    </details>
                 </div>
-
-                <!-- Negotiation Check Card -->
-                <div class="card">
-                    <h2 class="text-xl font-semibold mb-4 text-gray-800">4. Negotiation Check</h2>
-                    
-                    <div class="input-group">
-                        <label for="markupPercent">Assumed Contractor Markup (O&P)</label>
-                        <div class="input-adornment">
-                            <input type="number" id="markupPercent" value="20">
-                            <span>%</span>
-                        </div>
-                    </div>
-                    
-                    <dl class="mb-4">
-                         <div class="output-group">
-                            <dt>Your 'Should-Pay' Bid</dt>
-                            <dd id="outShouldPayBid" class="font-bold text-blue-700">$0.00</dd>
-                        </div>
-                    </dl>
-
-                    <div class="input-group">
-                        <label for="contractorBid">Contractor's Bid</label>
-                        <div class="input-adornment">
-                            <input type="number" id="contractorBid" placeholder="Enter bid amount...">
-                            <span>$</span>
-                        </div>
-                    </div>
-                    
-                    <dl>
-                        <div class="output-group">
-                            <dt>Difference</dt>
-                            <dd id="outBidDifference" class="font-bold">$0.00</dd>
-                        </div>
-                        <div class="output-group">
-                            <dt class="flex items-center">
-                                Variance
-                                <span class="tooltip">
-                                    <span class="info-icon">i</span>
-                                    <span class="tooltip-content">
-                                        <p>This compares the bid to your 'Should-Pay' price. A 'Reasonable' variance is close to 0%.</p>
-                                        <table>
-                                            <tr><th>Variance</th><th>Label</th><th>Notes</th></tr>
-                                            <tr><td>0–10%</td><td>Reasonable</td><td>Bid is aligned with your estimate.</td></tr>
-                                            <tr><td>10%–20%</td><td>Moderate</td><td>May be high, or a complex job.</td></tr>
-                                            <tr><td>> 20%</td><td>High</td><td>Good area to negotiate.</td></tr>
-                                        </table>
-                                    </span>
-                                </span>
-                            </dt>
-                            <dd id="outBidVariance" class="font-bold">0.00%</dd>
-                        </div>
-                    </dl>
-                </div>
-
             </div>
+
+            <!-- STEP 3: PREP & FINISHING -->
+            <div class="card border-t-4 border-orange-500">
+                <h2 class="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-6 border-b pb-2">3. Prep & Finishing</h2>
+                <div class="space-y-4">
+                    <div class="flex flex-col gap-2 p-3 bg-orange-50 border border-orange-100 rounded-lg">
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" id="demoRequired" onchange="calculate()" class="w-4 h-4 text-orange-600">
+                                <span class="text-[10px] font-black text-orange-800 uppercase">Demo Exist. <span class="tooltip"><span class="info-icon !bg-orange-300">i</span><span class="tooltip-content">Calculated at 0.14 HR/SF. Includes perimeter sawcut and jackhammer break.</span></span></span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" id="haulRequired" onchange="calculate()" class="w-4 h-4 text-orange-600">
+                                <span class="text-[10px] font-black text-orange-800 uppercase">Haul Spoils <span class="tooltip"><span class="info-icon !bg-orange-300">i</span><span class="tooltip-content">Hauling labor is 0.50 HR/CY (Standard) or 1.20 HR/CY (Wheelbarrow).</span></span></span>
+                            </label>
+                        </div>
+                        <div class="pt-2 border-t border-orange-100">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" id="wheelPour" onchange="calculate()" class="w-4 h-4 text-blue-600">
+                                <span class="text-[10px] font-black text-blue-600 uppercase italic">Wheelbarrow Mode <span class="tooltip"><span class="info-icon !bg-blue-300">i</span><span class="tooltip-content">Switches placement labor to 2.50 HR/CY and hauling to 1.20 HR/CY.</span></span></span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Finishing Style <span class="tooltip"><span class="info-icon">i</span><span class="tooltip-content">Combines Screed (0.02), Bull Float (0.01), Edge (0.10 LF), and Trowel (0.02) factors.</span></span></label>
+                        <select id="finishingStyle" onchange="calculate()">
+                            <option value="broom">Standard Broom Finish</option>
+                            <option value="salt">Salt Finish (Traditional)</option>
+                            <option value="sand">Sand Finish / Top-Cast</option>
+                            <option value="stamped">Stamped Concrete Pattern</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Rentals & Equipment <span class="tooltip"><span class="info-icon">i</span><span class="tooltip-content">Flat-fee material adder for items like compactors or trailers.</span></span></label>
+                        <div class="input-adornment"><input type="number" id="costEquip" value="0" oninput="calculate()" placeholder="0.00"><span>$ Total</span></div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 border-t border-slate-50 pt-2">
+                        <div class="input-group mb-0">
+                            <label class="flex justify-between items-center">
+                                <span>Difficulty <span class="tooltip"><span class="info-icon">i</span><span class="tooltip-content">Shift of 0.1 adds 1.0 Man-Hour to the project total.</span></span></span>
+                                <span id="diffVal" class="text-blue-600 font-bold bg-blue-50 px-2 rounded">0.0x</span>
+                            </label>
+                            <input type="range" id="difficultyFactor" min="0" max="2" step="0.1" value="0.0" oninput="calculate()" class="mt-2">
+                        </div>
+                        <div class="input-group mb-0">
+                            <label>Base Labor Rate <span class="tooltip"><span class="info-icon">i</span><span class="tooltip-content">Standard burdened hourly rate including insurance and taxes.</span></span></label>
+                            <div class="input-adornment"><input type="number" id="laborRate" value="45" oninput="calculate()"><span>$/HR</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BOTTOM ROW: AUDIT & FINAL OUTPUTS -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
+            <!-- PROJECT SUMMARY -->
+            <div class="lg:col-span-1">
+                <div class="card border-l-4 border-slate-800">
+                    <h2 class="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-6 border-b pb-2">Project Summary</h2>
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="p-3 bg-slate-50 rounded-lg">
+                                <p class="text-[9px] font-bold text-slate-400 uppercase">Surface Area <span class="tooltip"><span class="info-icon !w-3 !h-3 !text-[7px]">i</span><span class="tooltip-content">Factors into all SF-based labor (Excavation, Base, Finish).</span></span></p>
+                                <p id="outArea" class="text-lg font-black text-slate-800">--</p>
+                            </div>
+                            <div class="p-3 bg-slate-50 rounded-lg">
+                                <p class="text-[9px] font-bold text-slate-400 uppercase">Concrete Vol. <span class="tooltip"><span class="info-icon !w-3 !h-3 !text-[7px]">i</span><span class="tooltip-content">Calculated with 10% waste. Factors into Placement labor.</span></span></p>
+                                <p id="outVolumeWaste" class="text-lg font-black text-slate-800">--</p>
+                            </div>
+                            <div class="p-3 bg-slate-50 rounded-lg">
+                                <p class="text-[9px] font-bold text-slate-400 uppercase">Rebar Needed <span class="tooltip"><span class="info-icon !w-3 !h-3 !text-[7px]">i</span><span class="tooltip-content">Total linear feet of rebar based on grid spacing.</span></span></p>
+                                <p id="outRebarLf" class="text-lg font-black text-slate-800">--</p>
+                            </div>
+                            <div class="p-3 bg-slate-50 rounded-lg">
+                                <p class="text-[9px] font-bold text-slate-400 uppercase">Perimeter LF <span class="tooltip"><span class="info-icon !w-3 !h-3 !text-[7px]">i</span><span class="tooltip-content">Factors into all LF-based labor (Forming, Edging, Stripping).</span></span></p>
+                                <p id="outPerimeter" class="text-lg font-black text-slate-800">--</p>
+                            </div>
+                        </div>
+                        <div class="p-4 bg-blue-50 rounded-lg border border-blue-100 flex justify-between items-center">
+                            <div>
+                                <p class="text-[10px] font-black text-blue-400 uppercase tracking-widest">Total Man Hours <span class="tooltip"><span class="info-icon !bg-blue-300">i</span><span class="tooltip-content">Aggregated man-hours from Logistics, Prep, Forms, Pour, Finish, Cleanup, and Difficulty.</span></span></p>
+                                <p id="outTotalLaborHours" class="text-2xl font-black text-blue-700">--</p>
+                            </div>
+                            <p id="outFinishLabel" class="text-[10px] font-bold text-blue-800 bg-white px-3 py-1 rounded-full shadow-sm">--</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NEGOTIATION CHECK -->
+            <div class="lg:col-span-1">
+                <div class="card bg-blue-50 border border-blue-100">
+                    <h2 class="text-xs font-black text-blue-400 uppercase tracking-[0.2em] mb-6 border-b border-blue-100 pb-2">Negotiation Check</h2>
+                    <div class="space-y-4">
+                        <div class="input-group">
+                            <label class="!text-blue-700">Contractor Quote Received</label>
+                            <div class="input-adornment"><input type="number" id="contractorBid" placeholder="0.00" oninput="calculate()" class="bg-white border-blue-200 font-bold"><span>$</span></div>
+                        </div>
+                        <div class="flex items-center justify-between py-1 border-t border-blue-100 pt-3">
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Target Bid (inc. Markup)</p>
+                            <p id="outShouldPayBid" class="text-xl font-black text-slate-900">$0</p>
+                        </div>
+                        <div id="varianceBox" class="text-center py-2 rounded-lg bg-white border border-blue-100">
+                            <p class="text-[9px] font-bold text-slate-400 uppercase">Market Variance</p>
+                            <p id="outBidVariance" class="text-xl font-black tracking-tight text-slate-700">--</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FINAL ESTIMATES -->
+            <div class="lg:col-span-1">
+                <div class="card bg-slate-900 text-white border-none shadow-2xl">
+                    <h2 class="text-xs font-black text-slate-500 uppercase tracking-[0.2em] mb-10 border-b border-slate-800 pb-2">Final Estimates</h2>
+                    <div class="space-y-8">
+                        <div class="flex justify-between items-center">
+                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Materials/Equip</p>
+                            <p id="outTotalMaterial" class="!text-white text-xl font-bold">--</p>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Labor Subtotal</p>
+                            <p id="outTotalLabor" class="!text-white text-xl font-bold">--</p>
+                        </div>
+                        <div class="pt-8 border-t border-slate-800 mt-10 flex justify-between items-center">
+                            <p class="text-[11px] font-black text-white uppercase tracking-[0.2em]">Net Project Cost</p>
+                            <p id="outGrandTotal" class="!text-green-400 text-xl font-black">--</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- REFERENCE INDEX -->
+        <div class="mb-12">
+            <details class="group bg-white rounded-xl border border-slate-200 shadow-sm transition-all">
+                <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-slate-50">
+                    <h3 class="font-black text-slate-800 uppercase text-xs tracking-widest">Reference Index: Calculation Assumptions</h3>
+                    <svg class="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </summary>
+                <div class="p-6 border-t border-slate-100 bg-white grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div>
+                        <h4 class="text-[10px] font-black text-blue-600 uppercase mb-4 tracking-widest">Core Unit Costs</h4>
+                        <table class="w-full text-[11px]">
+                            <tbody class="divide-y divide-slate-100">
+                                <tr class="py-1"><td>Concrete (3k)</td><td class="text-right font-bold">$170 / CY</td></tr>
+                                <tr class="py-1"><td>Concrete (6k)</td><td class="text-right font-bold">$265 / CY</td></tr>
+                                <tr class="py-1"><td>Base (Class 2)</td><td class="text-right font-bold">$38 / CY</td></tr>
+                                <tr class="py-1"><td>Rebar (#4)</td><td class="text-right font-bold">$0.68 / LF</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                        <h4 class="text-[10px] font-black text-orange-600 uppercase mb-4 tracking-widest">Labor (Man-Hrs/Unit)</h4>
+                        <table class="w-full text-[11px]">
+                            <tbody class="divide-y divide-slate-100">
+                                <tr class="py-1"><td>Manual Excavation</td><td class="text-right font-bold">0.05 / SF</td></tr>
+                                <tr class="py-1"><td>Formwork Setup</td><td class="text-right font-bold">0.20 / LF</td></tr>
+                                <tr class="py-1"><td>Truck Placement</td><td class="text-right font-bold">0.75 / CY</td></tr>
+                                <tr class="py-1"><td>Hauling (Standard)</td><td class="text-right font-bold">0.50 / CY</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                        <h4 class="text-[10px] font-black text-slate-900 uppercase mb-4 tracking-widest">Logistics</h4>
+                        <table class="w-full text-[11px]">
+                            <tbody class="divide-y divide-slate-100">
+                                <tr class="py-1"><td>Pump Fee</td><td class="text-right font-bold">$1,000 Flat</td></tr>
+                                <tr class="py-1"><td>Wait for Bleed</td><td class="text-right font-bold">1.0 Hr (LS)</td></tr>
+                                <tr class="py-1"><td>Fixed Markup</td><td class="text-right font-bold">20% Total</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </details>
         </div>
     </div>
 
     <script>
-        // --- 3D Scene Management ---
-        const sceneData = {
-            renderer: null,
-            camera: null,
-            controls: null,
-            scene: null,
-            meshes: {}
-        };
+        const REBAR_PRICE = { "#3": 0.42, "#4": 0.68, "#5": 1.10 };
+        const PSI_DEFAULTS = { "2500": 160, "3000": 170, "3500": 178, "4000": 188, "4500": 205, "5000": 225, "6000": 265 };
+        const MARKET_STANDARDS = { wasteFactor: 10, costEnvFee: 50, costShortLoad: 250, costBaseMaterial: 38, markupPercent: 20, costDemoSF: 2.50, costHaulCY: 65.00 };
+        const FINISH_LOGIC = { broom: { label: "Broom", multi: 1.0 }, salt: { label: "Salt", multi: 1.25 }, sand: { label: "Sand", multi: 1.6 }, stamped: { label: "Stamped", multi: 2.2 } };
 
-        // --- Data ---
-        const REBAR_COST_PER_LF = {
-            "#3": 0.40, "#4": 0.65, "#5": 1.05, "#6": 1.48
-        };
-        
-        // --- Global Cost Variable ---
-        let currentGrandTotal = 0;
-        let currentShouldPayBid = 0;
+        function safeSet(id, value) { const el = document.getElementById(id); if (el) el.textContent = value; }
+        function handlePsiChange() { const val = PSI_DEFAULTS[document.getElementById('slabPsi').value] || 170; document.getElementById('costConcrete').value = val; calculate(); }
 
-        // --- Concrete Calculator Logic ---
-        const concreteInputs = [
-            'length', 'width', 'thickness', 'gravelThickness',
-            'jobDifficulty', 'laborRate', 'costConcrete', 'wasteFactor', 'laborFactor',
-            'costGravelMaterial', 'gravelLaborFactor', 'costSpoilsHaulAway',
-            'costVaporBarrierMaterial', 'vaporBarrierLaborFactor', 
-            'rebarSize', 'rebarSpacing', 'rebarLayers', 'rebarLaborFactor', 
-            'costFormworkMaterial', 'formworkLaborFactor', 'costFinishing',
-            'pumpRequired', 'pumpRentalFee', 'costEquipmentRental',
-            'markupPercent', 'contractorBid'
-        ].reduce((acc, id) => {
-            const el = document.getElementById(id);
-            if (!el) console.error("Missing concrete input element: #" + id);
-            acc[id] = el;
-            return acc;
-        }, {});
+        function calculate() {
+            const getVal = (id) => parseFloat(document.getElementById(id)?.value) || 0;
+            const isCheck = (id) => document.getElementById(id)?.checked || false;
 
-        const concreteOutputs = [
-            'outArea', 'outPerimeter', 'outVolume', 'outVolumeWaste', 'outVolumeGravel', 'outRebarLf', 'outCostConcrete', 
-            'outGravelMaterial', 'outCostSpoilsHaulAway', 'outVaporBarrierMaterial', 'outRebarMaterial', 'outCostFormworkMaterial', 'outCostPump', 'outCostEquipmentRental',
-            'outTotalMaterial', 
-            'outBaseLaborHours', 'outGravelLaborHours', 'outVaporBarrierLaborHours', 'outRebarLaborHours', 'outFormworkLaborHours', 'outTotalLaborHours',
-            'outBaseLaborCost', 'outGravelLabor', 'outVaporBarrierLabor', 'outRebarLabor', 'outFormworkLabor', 'outCostFinishing', 'outTotalLabor', 'outGrandTotal', 
-            'thicknessLabel', 'gravelThicknessLabel', 'outExcavationDepth', 'rebarLabel',
-            'outShouldPayBid', 'outBidDifference', 'outBidVariance'
-        ].reduce((acc, id) => {
-            const el = document.getElementById(id);
-            if (!el) console.error("Missing concrete output element: #" + id);
-            acc[id] = el;
-            return acc;
-        }, {});
-
-        const slabCanvas = document.getElementById('slabSimulator');
-        let concreteMouse, concreteRaycaster;
-
-        function initConcrete3D() {
-            const s = sceneData;
-            s.scene = new THREE.Scene();
-            s.scene.background = new THREE.Color(0xF9FAFB);
-
-            s.camera = new THREE.PerspectiveCamera(50, slabCanvas.clientWidth / slabCanvas.clientHeight, 0.1, 1000);
-            s.camera.position.set(15, 15, 15);
-            s.camera.lookAt(0, 0, 0);
-
-            s.renderer = new THREE.WebGLRenderer({ canvas: slabCanvas, antialias: true });
-            s.renderer.setSize(slabCanvas.clientWidth, slabCanvas.clientHeight);
-            s.renderer.setPixelRatio(window.devicePixelRatio);
-
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
-            s.scene.add(ambientLight);
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-            directionalLight.position.set(10, 20, 5);
-            s.scene.add(directionalLight);
-
-            const geometry = new THREE.BoxGeometry(1, 1, 1);
-            
-            s.meshes.slabMesh = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({ color: 0x808080, roughness: 0.7, metalness: 0.1 }));
-            s.scene.add(s.meshes.slabMesh);
-
-            s.meshes.gravelMesh = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({ color: 0x8B4513, roughness: 0.9, metalness: 0.0 }));
-            s.scene.add(s.meshes.gravelMesh);
-            
-            s.meshes.rebarGroup = new THREE.Group();
-            s.meshes.rebarGroup.visible = false; 
-            s.scene.add(s.meshes.rebarGroup);
-
-            s.meshes.gridHelper = new THREE.GridHelper(20, 20, 0xcccccc, 0xdddddd);
-            s.meshes.gridHelper.position.y = 0; 
-            s.scene.add(s.meshes.gridHelper);
-
-            s.controls = new THREE.OrbitControls(s.camera, s.renderer.domElement);
-            s.controls.enableDamping = true;
-            s.controls.dampingFactor = 0.05;
-            s.controls.target.set(0, 0, 0);
-
-            concreteMouse = new THREE.Vector2();
-            concreteRaycaster = new THREE.Raycaster();
-            slabCanvas.addEventListener('click', onSlabClick);
-
-            animateConcrete();
-        }
-
-        function animateConcrete() {
-            const s = sceneData;
-            requestAnimationFrame(animateConcrete);
-            
-            const canvas = s.renderer.domElement;
-            const width = canvas.clientWidth;
-            const height = canvas.clientHeight;
-            if (canvas.width !== width || canvas.height !== height) {
-                s.renderer.setSize(width, height, false);
-                s.camera.aspect = width / height;
-                s.camera.updateProjectionMatrix();
-            }
-            s.controls.update();
-            s.renderer.render(s.scene, s.camera);
-        }
-
-        function onSlabClick(event) {
-            const s = sceneData;
-            if (!s.renderer) return; 
-            const rect = s.renderer.domElement.getBoundingClientRect();
-            concreteMouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-            concreteMouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
-
-            concreteRaycaster.setFromCamera(concreteMouse, s.camera);
-            
-            const clickTargets = [];
-            if (s.meshes.slabMesh.visible) clickTargets.push(s.meshes.slabMesh);
-            if (s.meshes.gravelMesh.visible) clickTargets.push(s.meshes.gravelMesh);
-            if (s.meshes.rebarGroup.visible) {
-                s.meshes.rebarGroup.children.forEach(layerGroup => {
-                    clickTargets.push(...layerGroup.children);
-                });
-            }
-
-            const intersects = concreteRaycaster.intersectObjects(clickTargets, false); 
-
-            if (intersects.length > 0) {
-                const isSlabCurrentlyVisible = s.meshes.slabMesh.visible;
-                s.meshes.slabMesh.visible = !isSlabCurrentlyVisible;
-                s.meshes.gravelMesh.visible = !isSlabCurrentlyVisible;
-                s.meshes.rebarGroup.visible = isSlabCurrentlyVisible;
-                if (concreteOutputs.rebarLabel) {
-                    concreteOutputs.rebarLabel.classList.toggle('hidden', !isSlabCurrentlyVisible);
-                }
-            }
-        }
-
-        function updateRebarGrid(length, width, thicknessFt, rebarSpacingFt, layers) {
-            const s = sceneData;
-            if (!s.meshes.rebarGroup) return; 
-            
-            s.meshes.rebarGroup.clear(); 
-            const rebarSpacing = rebarSpacingFt || 1.5; 
-            const material = new THREE.LineBasicMaterial({ color: 0x333333 });
-
-            const createLayer = (yOffset) => {
-                const layer = new THREE.Group(); 
-                const lineCountX = (length > 0 && rebarSpacing > 0) ? Math.floor(length / rebarSpacing) : 0;
-                for (let i = 0; i <= lineCountX; i++) {
-                    const x = -length / 2 + i * rebarSpacing;
-                    const points = [new THREE.Vector3(x, yOffset, -width / 2), new THREE.Vector3(x, yOffset, width / 2)];
-                    layer.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(points), material));
-                }
-                const lineCountZ = (width > 0 && rebarSpacing > 0) ? Math.floor(width / rebarSpacing) : 0;
-                 for (let i = 0; i <= lineCountZ; i++) {
-                    const z = -width / 2 + i * rebarSpacing;
-                    const points = [new THREE.Vector3(-length / 2, yOffset, z), new THREE.Vector3(length / 2, yOffset, z)];
-                    layer.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(points), material));
-                }
-                return layer;
+            const getOverride = (id, stdKey) => {
+                const el = document.getElementById(id);
+                if (!el || el.value === "") return MARKET_STANDARDS[stdKey];
+                return parseFloat(el.value);
             };
 
-            const numLayers = layers || 1; 
-            if (numLayers === 2) {
-                const topOffset = thicknessFt * 0.25; 
-                const bottomOffset = -thicknessFt * 0.25; 
-                s.meshes.rebarGroup.add(createLayer(topOffset));
-                s.meshes.rebarGroup.add(createLayer(bottomOffset));
-            } else {
-                s.meshes.rebarGroup.add(createLayer(0)); 
-            }
-            
-            if (concreteOutputs.rebarLabel) {
-                concreteOutputs.rebarLabel.textContent = `| Rebar View Active (${numLayers} Layer${numLayers > 1 ? 's' : ''})`;
-            }
-        }
+            const LFt = getVal('lengthFt'), LIn = getVal('lengthIn'), WFt = getVal('widthFt'), WIn = getVal('widthIn');
+            const L = LFt + (LIn / 12), W = WFt + (WIn / 12);
+            const thickIn = getVal('thickness'), baseIn = getVal('baseThickness'), aboveIn = getVal('aboveGrade');
+            const netExcavationIn = Math.max(0, (thickIn + baseIn) - aboveIn);
+            const area = L * W, perimeter = (L + W) * 2;
+            const rate = getVal('laborRate');
 
-        function calculateAllConcrete() {
-            // 1. Get values
-            const length = parseFloat(concreteInputs.length.value) || 0;
-            const width = parseFloat(concreteInputs.width.value) || 0;
-            const thicknessIn = parseFloat(concreteInputs.thickness.value) || 0;
-            const gravelThicknessIn = parseFloat(concreteInputs.gravelThickness.value) || 0;
-            
-            const jobDifficultyMultiplier = parseFloat(concreteInputs.jobDifficulty.value) || 1.0;
-            const laborRate = parseFloat(concreteInputs.laborRate.value) || 0; // $/hr
-            
-            const costConcrete = parseFloat(concreteInputs.costConcrete.value) || 0;
-            const wasteFactor = parseFloat(concreteInputs.wasteFactor.value) || 0;
-            const laborFactor = parseFloat(concreteInputs.laborFactor.value) || 0; // Base labor, min / sq ft
-            
-            const costGravelMaterialPerCY = parseFloat(concreteInputs.costGravelMaterial.value) || 0;
-            const gravelLaborFactor = parseFloat(concreteInputs.gravelLaborFactor.value) || 0; // min / sq ft
-            const costSpoilsHaulAway = parseFloat(concreteInputs.costSpoilsHaulAway.value) || 0; // $/CY
+            // Difficulty logic
+            const diffFactor = parseFloat(document.getElementById('difficultyFactor').value) || 0.0;
+            document.getElementById('diffVal').textContent = diffFactor.toFixed(1) + 'x';
+            const additiveHrs = diffFactor * 10;
 
-            const costVaporBarrierMaterial = parseFloat(concreteInputs.costVaporBarrierMaterial.value) || 0;
-            const vaporBarrierLaborFactor = parseFloat(concreteInputs.vaporBarrierLaborFactor.value) || 0; // min / sq ft
-            
-            const rebarSize = concreteInputs.rebarSize.value;
-            const rebarSpacingIn = parseFloat(concreteInputs.rebarSpacing.value) || 18;
-            const layers = parseInt(concreteInputs.rebarLayers.value, 10) || 1;
-            const rebarLaborFactor = parseFloat(concreteInputs.rebarLaborFactor.value) || 0; // min / sq ft
-            
-            const costFormworkMaterial = parseFloat(concreteInputs.costFormworkMaterial.value) || 0; // $/lf
-            const formworkLaborFactor = parseFloat(concreteInputs.formworkLaborFactor.value) || 0; // min / lf
-            
-            const costFinishing = parseFloat(concreteInputs.costFinishing.value) || 0; // Bundled M+L
-            const pumpRequired = concreteInputs.pumpRequired.checked;
-            const pumpRentalFee = parseFloat(concreteInputs.pumpRentalFee.value) || 0;
-            const costEquipmentRental = parseFloat(concreteInputs.costEquipmentRental.value) || 0; 
+            const waste = getOverride('wasteFactor', 'wasteFactor');
+            const envFee = getOverride('costEnvFee', 'costEnvFee');
+            const shortLoad = getOverride('costShortLoad', 'costShortLoad');
+            const basePrice = getOverride('costBaseMaterial', 'costBaseMaterial');
 
-            // 2. Perform calculations
-            const thicknessFt = thicknessIn / 12;
-            const gravelThicknessFt = gravelThicknessIn / 12;
-            const totalExcavationIn = thicknessIn + gravelThicknessIn;
-            const area = length * width;
-            const perimeter = (length + width) * 2;
-            
-            const volumeFt = area * thicknessFt;
-            const volumeYd = volumeFt / 27;
-            const volumeYdWithWaste = volumeYd * (1 + (wasteFactor / 100));
+            const volCY = (area * (thickIn / 12)) / 27;
+            const volWasteCY = volCY * (1 + (waste / 100));
+            const baseCY = (area * (baseIn / 12)) / 27;
+            const haulCY = (area * (netExcavationIn / 12)) / 27;
 
-            const gravelVolumeFt = area * gravelThicknessFt;
-            const gravelVolumeYd = gravelVolumeFt / 27; // This is also the spoils volume
-            
-            const rebarSpacingFt = rebarSpacingIn / 12;
-            const numBarsLength = (length > 0 && rebarSpacingFt > 0) ? Math.floor(length / rebarSpacingFt) + 1 : 0;
-            const totalLfLengthBars = numBarsLength * width;
-            const numBarsWidth = (width > 0 && rebarSpacingFt > 0) ? Math.floor(width / rebarSpacingFt) + 1 : 0;
-            const totalLfWidthBars = numBarsWidth * length;
-            let totalLinearFeet = (totalLfLengthBars + totalLfWidthBars) * layers;
+            const rsFt = 1.5;
+            const rebarLF = ((Math.floor(L / rsFt) + 1) * W + (Math.floor(W / rsFt) + 1) * L);
+            const finish = FINISH_LOGIC[document.getElementById('finishingStyle').value] || FINISH_LOGIC.broom;
 
-            // --- Material Costs ---
-            const concreteCost = volumeYdWithWaste * costConcrete;
-            const gravelMaterialCost = gravelVolumeYd * costGravelMaterialPerCY;
-            const spoilsHaulAwayCost = gravelVolumeYd * costSpoilsHaulAway; // New
-            const vaporBarrierMaterialCost = area * costVaporBarrierMaterial;
-            const rebarMaterialCost = totalLinearFeet * (REBAR_COST_PER_LF[rebarSize] || 0);
-            const formworkMaterialCost = perimeter * costFormworkMaterial; // Updated
-            const pumpCost = pumpRequired ? pumpRentalFee : 0;
-            
-            const totalMaterialCost = concreteCost + gravelMaterialCost + spoilsHaulAwayCost + vaporBarrierMaterialCost + rebarMaterialCost + formworkMaterialCost + pumpCost + costEquipmentRental;
+            // --- LABOR CALCULATION ---
+            const linearHrs = perimeter * (0.05 + 0.20 + 0.05 + 0.10 + 0.05); // Layout, Form, Exp, Edge, Strip
+            let areaRate = (0.05 + 0.01 + 0.03 + 0.02 + 0.02 + 0.01 + 0.02); // Exc, Comp, Base, Rebar, Screed, Float, Trowel
+            if (isCheck('vaporBarrier')) areaRate += 0.01;
+            const areaHrs = area * areaRate * finish.multi;
 
-            // --- Labor Hours & Costs (from Minutes) ---
-            const baseLaborHours = ((area * laborFactor) / 60) * jobDifficultyMultiplier; 
-            const gravelLaborHours = ((area * gravelLaborFactor) / 60) * jobDifficultyMultiplier; 
-            const vaporBarrierLaborHours = ((area * vaporBarrierLaborFactor) / 60) * jobDifficultyMultiplier; 
-            const rebarLaborHours = ((area * rebarLaborFactor) / 60) * jobDifficultyMultiplier; 
-            const formworkLaborHours = ((perimeter * formworkLaborFactor) / 60) * jobDifficultyMultiplier; // New
-            
-            const totalLaborHours = baseLaborHours + gravelLaborHours + vaporBarrierLaborHours + rebarLaborHours + formworkLaborHours; // Added formwork
+            const placeRate = isCheck('wheelPour') ? 2.50 : 0.75;
+            const haulRate = isCheck('wheelPour') ? 1.20 : 0.50;
+            const placementHrs = volWasteCY * placeRate;
+            const haulLaborHrs = isCheck('haulRequired') ? (haulCY * haulRate) : 0;
+            const demoHrs = isCheck('demoRequired') ? (area * 0.14) : 0;
 
-            const baseLaborCost = baseLaborHours * laborRate;
-            const gravelLaborCost = gravelLaborHours * laborRate;
-            const vaporBarrierLaborCost = vaporBarrierLaborHours * laborRate;
-            const rebarLaborCost = rebarLaborHours * laborRate;
-            const formworkLaborCost = formworkLaborHours * laborRate; // New
-            const finishingCost = area * costFinishing; // This is still bundled, not affected by labor rate or multiplier
-            
-            const totalLaborCost = baseLaborCost + gravelLaborCost + vaporBarrierLaborCost + rebarLaborCost + formworkLaborCost + finishingCost; // Added formwork
+            const totalLaborHrs = linearHrs + areaHrs + placementHrs + haulLaborHrs + demoHrs + 4.0 + additiveHrs;
+            const laborCost = totalLaborHrs * rate;
 
-            currentGrandTotal = totalMaterialCost + totalLaborCost; // Store in global
+            // --- MATERIAL & EQUIPMENT ---
+            const equipCost = getVal('costEquip');
+            const pumpFee = isCheck('pumpRequired') ? 1000 : 0;
+            const envTotal = envFee * Math.ceil(volWasteCY / 9);
+            const shortTotal = volWasteCY < 7 ? shortLoad : 0;
 
-            // 3. Update output fields
-            concreteOutputs.outArea.textContent = `${area.toFixed(2)} sq ft`;
-            concreteOutputs.outPerimeter.textContent = `${perimeter.toFixed(2)} lf`;
-            concreteOutputs.outVolume.textContent = `${volumeYd.toFixed(2)} cu yds`;
-            concreteOutputs.outVolumeWaste.textContent = `${volumeYdWithWaste.toFixed(2)} cu yds`;
-            concreteOutputs.outVolumeGravel.textContent = `${gravelVolumeYd.toFixed(2)} cu yds`; // Updated label
-            concreteOutputs.outRebarLf.textContent = `${totalLinearFeet.toFixed(2)} lf`;
-            concreteOutputs.outExcavationDepth.textContent = `${totalExcavationIn.toFixed(2)} in`;
+            const concreteMat = volWasteCY * (getVal('costConcrete') + (isCheck('fiberMesh') ? 15 : 0));
+            const rebarCost = rebarLF * (REBAR_PRICE[document.getElementById('rebarSize').value] || 0.68);
+            const baseCost = baseCY * basePrice;
             
-            concreteOutputs.outCostConcrete.textContent = `$${concreteCost.toFixed(2)}`;
-            concreteOutputs.outGravelMaterial.textContent = `$${gravelMaterialCost.toFixed(2)}`;
-            concreteOutputs.outCostSpoilsHaulAway.textContent = `$${spoilsHaulAwayCost.toFixed(2)}`; // New
-            concreteOutputs.outVaporBarrierMaterial.textContent = `$${vaporBarrierMaterialCost.toFixed(2)}`;
-            concreteOutputs.outRebarMaterial.textContent = `$${rebarMaterialCost.toFixed(2)}`;
-            concreteOutputs.outCostFormworkMaterial.textContent = `$${formworkMaterialCost.toFixed(2)}`; // Updated
-            concreteOutputs.outCostPump.textContent = `$${pumpCost.toFixed(2)}`;
-            concreteOutputs.outCostEquipmentRental.textContent = `$${costEquipmentRental.toFixed(2)}`;
-            concreteOutputs.outTotalMaterial.textContent = `$${totalMaterialCost.toFixed(2)}`;
+            const matSubtotal = concreteMat + baseCost + rebarCost + envTotal + shortTotal + equipCost + pumpFee;
+            const prepMaterial = (isCheck('demoRequired') ? area * 2.5 : 0) + (isCheck('haulRequired') ? haulCY * 65 : 0);
             
-            concreteOutputs.outBaseLaborHours.textContent = `${baseLaborHours.toFixed(2)} hrs`;
-            concreteOutputs.outGravelLaborHours.textContent = `${gravelLaborHours.toFixed(2)} hrs`;
-            concreteOutputs.outVaporBarrierLaborHours.textContent = `${vaporBarrierLaborHours.toFixed(2)} hrs`;
-            concreteOutputs.outRebarLaborHours.textContent = `${rebarLaborHours.toFixed(2)} hrs`;
-            concreteOutputs.outFormworkLaborHours.textContent = `${formworkLaborHours.toFixed(2)} hrs`; // New
-            concreteOutputs.outTotalLaborHours.textContent = `${totalLaborHours.toFixed(2)} hrs`;
+            const totalMaterialEquip = matSubtotal + prepMaterial;
+            const grandTotal = totalMaterialEquip + laborCost;
+            const shouldPay = grandTotal * 1.20;
 
-            concreteOutputs.outBaseLaborCost.textContent = `$${baseLaborCost.toFixed(2)}`;
-            concreteOutputs.outGravelLabor.textContent = `$${gravelLaborCost.toFixed(2)}`;
-            concreteOutputs.outVaporBarrierLabor.textContent = `$${vaporBarrierLaborCost.toFixed(2)}`;
-            concreteOutputs.outRebarLabor.textContent = `$${rebarLaborCost.toFixed(2)}`;
-            concreteOutputs.outFormworkLabor.textContent = `$${formworkLaborCost.toFixed(2)}`; // New
-            concreteOutputs.outCostFinishing.textContent = `$${finishingCost.toFixed(2)}`;
-            concreteOutputs.outTotalLabor.textContent = `$${totalLaborCost.toFixed(2)}`;
-            
-            concreteOutputs.outGrandTotal.textContent = `$${currentGrandTotal.toFixed(2)}`;
-            concreteOutputs.thicknessLabel.textContent = `${thicknessIn} in`;
-            concreteOutputs.gravelThicknessLabel.textContent = `${gravelThicknessIn} in`;
+            safeSet('excavationHelperValue', `${netExcavationIn.toFixed(1)}"` );
+            safeSet('outArea', `${area.toFixed(0)} SF`);
+            safeSet('outPerimeter', `${perimeter.toFixed(0)} LF`);
+            safeSet('outVolumeWaste', `${volWasteCY.toFixed(1)} CY`);
+            safeSet('outTotalLaborHours', `${totalLaborHrs.toFixed(1)} Hrs`);
+            safeSet('outRebarLf', `${rebarLF.toFixed(0)} LF`);
+            safeSet('outFinishLabel', finish.label);
+            safeSet('outTotalMaterial', `$${totalMaterialEquip.toLocaleString(undefined, {minimumFractionDigits:2})}`);
+            safeSet('outTotalLabor', `$${laborCost.toLocaleString(undefined, {minimumFractionDigits:2})}`);
+            safeSet('outGrandTotal', `$${grandTotal.toLocaleString(undefined, {minimumFractionDigits:2})}`);
+            safeSet('outShouldPayBid', `$${shouldPay.toLocaleString(undefined, {maximumFractionDigits:0})}`);
 
-            // --- 4. Update Negotiation Check ---
-            calculateNegotiation(); 
-
-            // 5. Update the 3D visual simulator
-            const s = sceneData;
-            if (s.meshes.slabMesh) {
-                s.meshes.slabMesh.scale.set(length, thicknessFt, width);
-                s.meshes.gravelMesh.scale.set(length, gravelThicknessFt, width);
-                
-                const gravelY = gravelThicknessFt / 2;
-                const slabY = gravelThicknessFt + (thicknessFt / 2);
-                
-                s.meshes.gravelMesh.position.y = gravelY;
-                s.meshes.slabMesh.position.y = slabY;
-                s.meshes.rebarGroup.position.set(0, slabY, 0); 
-
-                updateRebarGrid(length, width, thicknessFt, rebarSpacingFt, layers); 
-                
-                s.meshes.slabMesh.visible = true;
-                s.meshes.gravelMesh.visible = true;
-                s.meshes.rebarGroup.visible = false;
-                if (concreteOutputs.rebarLabel) concreteOutputs.rebarLabel.classList.add('hidden');
-            }
-
-            if (s.meshes.gridHelper) {
-                const maxDim = Math.max(length, width);
-                const newGridSize = Math.max(20, Math.ceil(maxDim / 10) * 2); 
-                if (newGridSize > 0) {
-                    s.scene.remove(s.meshes.gridHelper);
-                    s.meshes.gridHelper = new THREE.GridHelper(newGridSize, newGridSize / 2, 0xcccccc, 0xdddddd);
-                    s.meshes.gridHelper.position.y = 0; 
-                    s.scene.add(s.meshes.gridHelper);
-                }
-            }
-            
-            const avgHeight = (thicknessFt + gravelThicknessFt) / 2;
-            s.controls.target.set(0, avgHeight, 0);
-        }
-
-        function calculateNegotiation() {
-            const contractorBid = parseFloat(concreteInputs.contractorBid.value) || 0;
-            const markupPercent = parseFloat(concreteInputs.markupPercent.value) || 0;
-            
-            currentShouldPayBid = currentGrandTotal * (1 + (markupPercent / 100));
-            concreteOutputs.outShouldPayBid.textContent = `$${currentShouldPayBid.toFixed(2)}`;
-            
-            let difference = 0;
-            let variance = 0;
-            
-            if (contractorBid > 0 && currentShouldPayBid > 0) {
-                difference = contractorBid - currentShouldPayBid;
-                variance = (difference / currentShouldPayBid) * 100;
-            }
-            
-            concreteOutputs.outBidDifference.textContent = `$${difference.toFixed(2)}`;
-            concreteOutputs.outBidVariance.textContent = `${variance.toFixed(2)}%`;
-            
-            const differenceElement = concreteOutputs.outBidDifference;
-            const varianceElement = concreteOutputs.outBidVariance;
-
-            differenceElement.classList.remove('text-red-600', 'text-green-600');
-            varianceElement.classList.remove('text-red-600', 'text-green-600');
-
-            if (difference > 0) { 
-                differenceElement.classList.add('text-red-600');
-                varianceElement.classList.add('text-red-600');
-            } else if (difference < 0) { 
-                differenceElement.classList.add('text-green-600');
-                varianceElement.classList.add('text-green-600');
+            const bid = getVal('contractorBid');
+            if (bid > 0) {
+                const diff = bid - shouldPay;
+                safeSet('outBidVariance', `${((diff/shouldPay)*100).toFixed(1)}%`);
+                document.getElementById('outBidVariance').style.color = diff > 0 ? '#ef4444' : '#22c55e';
             }
         }
-
-        // --- Initial Setup ---
-        
-        Object.values(concreteInputs).forEach(input => {
-            if (!input) {
-                console.error("A concrete input element was not found during init.");
-                return;
-            }
-            if (input.id !== 'contractorBid') {
-                input.addEventListener('input', calculateAllConcrete);
-            } else {
-                input.addEventListener('input', calculateNegotiation);
-            }
-        });
-
-        initConcrete3D();
-        calculateAllConcrete();
-
+        window.onload = () => { calculate(); };
     </script>
-
 </body>
 </html>
+
